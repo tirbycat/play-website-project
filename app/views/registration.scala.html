@@ -1,0 +1,27 @@
+@(form: Form[Application.Registration])
+
+@if(flash.contains("success")) {
+<div class="alert alert-success">
+    @flash.get("success")
+</div>
+}
+
+@main("login", null, "Registration") {
+    <div class="container">
+        @helper.form(routes.Application.register , 'class -> "form-signin") {
+            <h2 class="form-signin-heading">Please register</h2>
+            @if(form.hasGlobalErrors) {
+                <div class="alert alert-error">
+                    @form.globalError.message
+                </div>
+            }
+
+            <input class="input-block-level" type="text" name="login" placeholder="Login" value="@form("login").value">
+            <input class="input-block-level" type="email" placeholder="Email" value="@form("email").value">
+            <input class="input-block-level" type="password" placeholder="Password">
+            <button class="btn btn-large btn-primary" type="submit">Registration</button>
+            or
+            <a href="@routes.Application.index">Cancel</a>
+        }
+    </div>
+}

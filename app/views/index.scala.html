@@ -1,0 +1,25 @@
+@(user: SiteUser, message: String, loginForm: Form[Application.Login])
+
+
+
+@main("index", user, "title") {
+    @topmenu("Project name", user, loginForm)
+
+    <h1 id="homeTitle">title</h1>
+    @if(flash.containsKey("success")) {
+        <div class="alert-message warning">
+            <strong>Done!</strong> @flash.get("success")
+        </div>
+    }
+    <div id="actions">
+
+        <form action="" method="GET">
+            <input type="search" id="searchbox" name="f" value="" placeholder="Filter by computer name...">
+            <input type="submit" id="searchsubmit" value="Filter by name" class="btn primary">
+        </form>
+
+        <a class="btn success" id="add" href="#">Add a new computer</a>
+
+    </div>
+
+}
