@@ -1,5 +1,13 @@
-@(title: MenuItem, topMenu: List[MenuItem])
+@(title: MenuItem, topMenu: List[MenuItem], fields: List[DataField], content: com.avaje.ebean.Page[SiteUser], currentSortBy: String, currentOrder: String, currentFilter: String)
 
-@sitepages.main("index", "title") {
+@sitepages.main("administration", "title") {
     @components.topmenu(title, topMenu, null)
+
+    <section id="main">
+        <h1 id="homeTitle"></h1>
+
+        @if(content != null){
+            @components.table("users", fields, content, currentSortBy, currentOrder, currentFilter)
+        }
+    </section>
 }

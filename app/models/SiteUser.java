@@ -1,5 +1,6 @@
 package models;
 
+import com.avaje.ebean.Page;
 import play.db.ebean.Model;
 import utils.Md5Hash;
 
@@ -68,4 +69,23 @@ public class SiteUser extends Model {
     public static Finder<Integer, SiteUser> find = new Finder<Integer, SiteUser>(
             Integer.class, SiteUser.class
     );
+
+    /**
+     * Return a page of computer
+     *
+     * @param page Page to display
+     * @param pageSize Number of computers per page
+     * @param sortBy Computer property used for sorting
+     * @param order Sort order (either or asc or desc)
+     * @param filter Filter applied on the name column
+     */
+    public static Page<SiteUser> page(int page, int pageSize, String sortBy, String order, String filter) {
+        return
+                find.where()
+                        .ilike("login", "%" + filter + "%")
+                        .orderBy(sortBy + " " + order)
+                        //.fetch("accounts")
+                        .findPagingList(pageSize)
+                        .getPage(page);
+    }
 }

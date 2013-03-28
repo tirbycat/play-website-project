@@ -1,0 +1,94 @@
+@(screen: String, fields: List[DataField], content: com.avaje.ebean.Page[SiteUser], currentSortBy: String, currentOrder: String, currentFilter: String)
+
+@link(newPage:Int, newSortBy:String) = @{
+    var sortBy = currentSortBy
+    var order = currentOrder
+
+    if(newSortBy != null) {
+        sortBy = newSortBy
+        if(currentSortBy == newSortBy) {
+            if(currentOrder == "asc") {
+                order = "desc"
+            } else {
+                order = "asc"
+            }
+        } else {
+            order = "asc"
+        }
+    }
+
+    // Generate the link
+    routes.AdminApplication.index(screen, newPage, sortBy, order, currentFilter)
+}
+
+@header(key:String, title:String) = {
+<th class="@key.replace(".","_") header @if(currentSortBy == key) @{if(currentOrder == "asc") "headerSortDown" else "headerSortUp"}">
+    <a href="@link(0, key)">@title</a>
+</th>
+}
+
+<div id="actions">
+    <form action="@link(0, "login")" method="GET">
+        <input type="search" id="searchbox" name="filter" value="@currentFilter" placeholder="Filter by login...">
+        <input type="submit" id="searchsubmit" value="Filter it" class="btn primary">
+    </form>
+    <a class="btn success" id="add" href="#">Add a new </a>
+</div>
+
+@if(content.getTotalRowCount == 0) {
+    <div class="well">
+        <em>Nothing to display</em>
+    </div>
+} else {
+    <table class="zebra-striped">
+        <thead>
+        <tr>
+            @for(field <- fields){
+                @header(field.dataFieldName, field.dataFieldCaption)
+            }
+        </tr>
+        </thead>
+        <tbody>
+
+        @for(row <- content.getList) {
+        <tr>
+            <td><a href="#">@row.id</a></td>
+            @for(col <- fields){
+                @if(col.dataFieldName != "id"){
+                    <td>
+                        @col.dataFieldName
+                    </td>
+                }
+            }
+        </tr>
+        }
+
+        </tbody>
+    </table>
+
+    <div id="pagination" class="pagination">
+        <ul>
+            @if(content.hasPrev) {
+                <li class="prev">
+                    <a href="@link(content.getPageIndex - 1, null)">&larr; Previous</a>
+                </li>
+            } else {
+                <li class="prev disabled">
+                    <a>&larr; Previous</a>
+                </li>
+            }
+            <li class="current">
+                <a>Displaying @content.getDisplayXtoYofZ(" to "," of ")</a>
+            </li>
+            @if(content.hasNext) {
+                <li class="next">
+                    <a href="@link(content.getPageIndex + 1, null)">Next &rarr;</a>
+                </li>
+            } else {
+                <li class="next disabled">
+                    <a>Next &rarr;</a>
+                </li>
+            }
+        </ul>
+    </div>
+}

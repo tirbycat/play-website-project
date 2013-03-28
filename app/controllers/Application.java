@@ -46,7 +46,6 @@ public class Application extends Controller{
         if (loginForm.hasErrors()) {
             return badRequest(login.render(loginForm, false, routes.Application.authenticate()));
         } else {
-            session().clear();
             SiteUser user = SiteUser.authenticate(loginForm.get().login, loginForm.get().password);
             session("userId",  user.id.toString());
             session("decodeStr", Md5Hash.md5(loginForm.get().login + loginForm.get().password));
@@ -66,24 +65,26 @@ public class Application extends Controller{
             user = SiteUser.find.byId(Integer.parseInt(session("userId")));
         }
 
-        MenuItem title = new MenuItem("Administration panel", routes.Application.index());
+        MenuItem title = new MenuItem("Memo tools", routes.Application.index());
 
         List<MenuItem> menu = new ArrayList<MenuItem>();
-        menu.add(new MenuItem("item1", routes.Application.index()));
-        MenuItem sub = new MenuItem("item2", null);
-        sub.addSubMenuItem(new MenuItem("item21", routes.Application.index()));
-        sub.addSubMenuItem(new MenuItem("item22", routes.Application.index()));
-        menu.add(sub);
+
         if(user != null){
+            menu.add(new MenuItem("Bookmarks", routes.Application.index()));
+            MenuItem sub = new MenuItem("item2", null);
+            sub.addSubMenuItem(new MenuItem("item21", routes.Application.index()));
+            sub.addSubMenuItem(new MenuItem("item22", routes.Application.index()));
+            menu.add(sub);
+
             MenuItem userSubMenu = new MenuItem(user.login, null);
-            userSubMenu.addSubMenuItem(new MenuItem("item21", routes.AdminApplication.index()));
+            userSubMenu.addSubMenuItem(new MenuItem("Account", routes.Application.index()));
             userSubMenu.addSubMenuItem(new MenuItem("divider", null));
-            userSubMenu.addSubMenuItem(new MenuItem("Logout", routes.AdminApplication.logout()));
+            userSubMenu.addSubMenuItem(new MenuItem("Logout", routes.Application.logout()));
             menu.add(userSubMenu);
         }else{
-
+            menu.add(new MenuItem("Registration", routes.Application.registration()));
         }
-        return ok(index.render(title, menu, form(LoginForm.class)));
+        return ok(index.render(title, menu, user == null ? form(LoginForm.class) : null));
     }
 
     @Security.Authenticated(Secured.class)

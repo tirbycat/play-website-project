@@ -11,7 +11,7 @@ POST    /auth                       controllers.Application.authenticate()
 GET     /logout                     controllers.Application.logout()
 
 # Administration module
-GET     /admimistration             controllers.AdminApplication.index()
+GET     /admimistration             controllers.AdminApplication.index(screen :String ?= "main", page:Int ?= 0, sort ?= "id", order ?= "asc", filter ?= "")
 GET     /admimistration/login       controllers.AdminApplication.login()
 POST    /admimistration/auth        controllers.AdminApplication.authenticate()
 GET     /admimistration/logout      controllers.AdminApplication.logout()
