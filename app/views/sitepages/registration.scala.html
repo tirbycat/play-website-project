@@ -1,4 +1,4 @@
-@(form: Form[Application.Registration])
+@(form: Form[forms.RegistrationForm])
 
 @if(flash.contains("success")) {
 <div class="alert alert-success">
@@ -6,7 +6,7 @@
 </div>
 }
 
-@main("login", null, "Registration") {
+@main("login", "Registration") {
     <div class="container">
         @helper.form(routes.Application.register , 'class -> "form-signin") {
             <h2 class="form-signin-heading">Please register</h2>
@@ -17,8 +17,8 @@
             }
 
             <input class="input-block-level" type="text" name="login" placeholder="Login" value="@form("login").value">
-            <input class="input-block-level" type="email" placeholder="Email" value="@form("email").value">
-            <input class="input-block-level" type="password" placeholder="Password">
+            <input class="input-block-level" type="email" name="email" placeholder="Email" value="@form("email").value">
+            <input class="input-block-level" type="password" name="password" placeholder="Password">
             <button class="btn btn-large btn-primary" type="submit">Registration</button>
             or
             <a href="@routes.Application.index">Cancel</a>

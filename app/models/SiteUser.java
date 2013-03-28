@@ -3,13 +3,12 @@ package models;
 import play.db.ebean.Model;
 import utils.Md5Hash;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
+
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.Email;
@@ -28,6 +27,7 @@ public class SiteUser extends Model {
 
     @Required
     @MaxLength(40)
+    @Column(length = 40, columnDefinition = "VARCHAR(40)")
     public String login;
 
     @Required
@@ -37,7 +37,12 @@ public class SiteUser extends Model {
 
     @Required
     @MaxLength(40)
+    @Column(length = 40, columnDefinition = "VARCHAR(40)")
     public String password;
+
+    @OneToMany(targetEntity=Account.class,cascade=CascadeType.ALL)
+    @JoinColumn(name="user_id",referencedColumnName="id")
+    public List<Account> accounts;
 
     public SiteUser(String login, String email, String password) {
         this.login = login;

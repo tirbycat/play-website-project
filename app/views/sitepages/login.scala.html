@@ -1,0 +1,25 @@
+@(form: Form[forms.LoginForm], adminModule: Boolean, authentificator: play.api.mvc.Call)
+
+@main("login", "Authorization") {
+    <div class="container">
+        @helper.form(action = authentificator, 'class -> "form-signin") {
+            <h2 class="form-signin-heading">Please sign in</h2>
+            @if(form.hasGlobalErrors) {
+                <div class="alert alert-error">
+                    @form.globalError.message
+                </div>
+            }
+            <input class="input-block-level" type="text" name="login" value="@form("login").value" placeholder="Login">
+            <input class="input-block-level" type="password" name="password" placeholder="Password">
+            <label class="checkbox">
+                <input type="checkbox" value="remember-me">
+                Remember me
+            </label>
+            <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+            @if(!adminModule){
+                or
+                <a href="@routes.Application.registration">Registration</a>
+            }
+        }
+    </div>
+}

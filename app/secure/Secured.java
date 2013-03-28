@@ -1,5 +1,6 @@
-package controllers;
+package secure;
 
+import controllers.routes;
 import play.*;
 import play.mvc.*;
 import play.mvc.Http.*;
@@ -22,6 +23,6 @@ public class Secured extends Security.Authenticator {
 
     @Override
     public Result onUnauthorized(Context ctx) {
-        return redirect(routes.Application.login());
+        return Results.redirect(routes.Application.login());
     }
 }

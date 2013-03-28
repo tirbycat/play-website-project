@@ -1,9 +1,7 @@
-@(user: SiteUser, message: String, loginForm: Form[Application.Login])
+@(title: MenuItem, topMenu: List[MenuItem], loginForm: Form[forms.LoginForm])
 
-
-
-@main("index", user, "title") {
-    @topmenu("Project name", user, loginForm)
+@sitepages.main("index", "title") {
+    @components.topmenu(title, topMenu, loginForm)
 
     <h1 id="homeTitle">title</h1>
     @if(flash.containsKey("success")) {

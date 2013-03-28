@@ -1,0 +1,50 @@
+@(title: MenuItem, menu: List[MenuItem], form: Form[forms.LoginForm])
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="@title.url">@title.title</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    @for(item <- menu) {
+                        @if(item.subMenu.size() == 0){
+                            <li class="active">
+                                <a href="@item.url">@item.title</a>
+                            </li>
+                        }else{
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    @item.title
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    @for(subitem <- item.subMenu) {
+                                        @if(subitem.title.equals("divider")){
+                                            <li class="divider"></li>
+                                        }else{
+                                            <li>
+                                                <a href="@subitem.url">@subitem.title</a>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    }
+                </ul>
+                @if(form != null){
+                    @helper.form(action = routes.Application.authenticate(), 'class -> "navbar-form pull-right"){
+                        <input class="span2" type="text" name="login" value="@form("login").value" placeholder="Login">
+                        <input class="span2" type="password" name="password" placeholder="Password">
+                        <button class="btn" type="submit">Sign in</button>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

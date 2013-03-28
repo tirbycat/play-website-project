@@ -1,8 +1,10 @@
 package models;
 
 import com.avaje.ebean.Page;
+import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -18,10 +20,17 @@ import java.util.List;
 @Entity
 public class Account extends Model{
     @Id
+    public Integer id;
+
+    @Constraints.Required
+    @Constraints.MaxLength(40)
+    @Column(length = 40, columnDefinition = "VARCHAR(40)")
     public String name;
+
+    @Constraints.Required
+    public String url;
+
     public String password;
-    @ManyToOne()
-    public SiteUser assignedTo;
 
     public Account(String name, String password) {
         this.name = name;
