@@ -38,7 +38,7 @@ public class AdminApplication  extends Controller {
         } else {
             SiteUser user = SiteUser.authenticate(loginForm.get().login, loginForm.get().password);
             session("adminUserId",  user.id.toString());
-            return redirect(routes.AdminApplication.index("main", 0, "id", "asc", ""));
+            return redirect(routes.AdminApplication.index("main"));
         }
     }
 
@@ -50,14 +50,14 @@ public class AdminApplication  extends Controller {
 
     private static List<MenuItem> makeMainMenu(AdminUser user){
         List<MenuItem> menu = new ArrayList<MenuItem>();
-        menu.add(new MenuItem("Users", routes.AdminApplication.index("users", 0, "id", "asc", "")));
+        menu.add(new MenuItem("Users", routes.AdminApplication.index("users")));
         MenuItem sub = new MenuItem("Manage", null);
-        sub.addSubMenuItem(new MenuItem("Roles", routes.AdminApplication.index("roles", 0, "id", "asc", "")));
-        sub.addSubMenuItem(new MenuItem("Administrators", routes.AdminApplication.index("administrators", 0, "id", "asc", "")));
+        sub.addSubMenuItem(new MenuItem("Roles", routes.AdminApplication.index("roles")));
+        sub.addSubMenuItem(new MenuItem("Administrators", routes.AdminApplication.index("administrators")));
         menu.add(sub);
 
         MenuItem userSubMenu = new MenuItem(user.login, null);
-        userSubMenu.addSubMenuItem(new MenuItem("Change account", routes.AdminApplication.index("account", 0, "id", "asc", "")));
+        userSubMenu.addSubMenuItem(new MenuItem("Change account", routes.AdminApplication.index("account")));
         userSubMenu.addSubMenuItem(new MenuItem("divider", null));
         userSubMenu.addSubMenuItem(new MenuItem("Logout", routes.AdminApplication.logout()));
         menu.add(userSubMenu);
@@ -66,24 +66,26 @@ public class AdminApplication  extends Controller {
     }
 
     @Security.Authenticated(AdminSecured.class)
-    public static Result index(String screen, int pagenum, String sortBy, String order, String filter) {
+    public static Result index(String screen) {
         AdminUser user = null;
         if(session("adminUserId") != null && !session("adminUserId").isEmpty()){
             user = AdminUser.find.byId(Integer.parseInt(session("adminUserId")));
         }
-        MenuItem title = new MenuItem("Administration panel", routes.AdminApplication.index("main", 0, "id", "asc", ""));
+        MenuItem title = new MenuItem("Administration panel", routes.AdminApplication.index("main"));
 
+        String table = "";
         List<DataField> fields = new ArrayList<DataField>();
         Page<SiteUser> page = null;
         if(screen.equals("users")){
+            table = "users";
             fields.add( new DataField("id", "ID"));
             fields.add( new DataField("login", "Login"));
             fields.add( new DataField("email", "Email"));
 
-            page = SiteUser.page(pagenum, 10, sortBy, order, filter);
+            //page = SiteUser.page(pagenum, 10, sortBy, order, filter);
             //page.getList().get(0).getClass()
         }
 
-        return ok(admin.render(title, makeMainMenu(user), fields, page, sortBy, order, filter));
+        return ok(admin.render(title, makeMainMenu(user), fields, routes.AjaxController.getTableData(table, 0, 10, "id", "asc", "").url()));
     }
 }

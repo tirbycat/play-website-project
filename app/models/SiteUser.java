@@ -1,7 +1,11 @@
 package models;
 
 import com.avaje.ebean.Page;
+import org.codehaus.jackson.JsonNode.*;
+import org.codehaus.jackson.node.ObjectNode;
 import play.db.ebean.Model;
+import play.libs.Json;
+import scala.util.parsing.json.JSONArray;
 import utils.Md5Hash;
 
 import javax.persistence.*;
@@ -87,5 +91,20 @@ public class SiteUser extends Model {
                         //.fetch("accounts")
                         .findPagingList(pageSize)
                         .getPage(page);
+    }
+
+    public static ObjectNode jsonPage(int page, int pageSize, String sortBy, String order, String filter){
+        ObjectNode result = Json.newObject();
+        Page<SiteUser> p = page(page, pageSize, sortBy, order, filter);
+
+        List<SiteUser> list = p.getList();
+        result.put("data", Json.toJson(list));
+        result.put("pageIndex", p.getPageIndex());
+        result.put("pageCount", p.getTotalPageCount());
+        result.put("hasPrev", p.hasPrev());
+        result.put("hasNext", p.hasNext());
+        result.put("getDisplayNum", p.getDisplayXtoYofZ(" to "," of "));
+
+        return result;
     }
 }

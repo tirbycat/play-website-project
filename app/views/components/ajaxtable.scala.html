@@ -1,0 +1,82 @@
+@(screen: String, fields: List[DataField], dataSource: String)
+
+@header(key:String, title:String) = {
+    <th class="@key.replace(".","_") header headerSortDown">
+        <a href="#">@title</a>
+    </th>
+}
+<div ng-controller="RowDataCtrl">
+    <div id="actions">
+        <form action="#" method="GET">
+            <input type="search" id="searchbox" name="filter" value="" placeholder="Filter by login...">
+            <input type="submit" id="searchsubmit" value="Filter it" class="btn primary">
+        </form>
+        <a class="btn success" id="add" href="#">Add a new </a>
+    </div>
+
+    <!--
+    <div class="well">
+        <em>Nothing to display</em>
+    </div>
+    -->
+
+    <table class="zebra-striped">
+        <thead>
+            <tr>
+                @for(field <- fields){
+                    @header(field.dataFieldName, field.dataFieldCaption)
+                }
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="row in data.data">
+                <td><a href="#">{{row.id}}</a></td>
+
+                @for(col <- fields){
+                    @if(col.dataFieldName != "id"){
+                        <td>
+                            {{row.@col.dataFieldName}}
+                        </td>
+                    }
+                }
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="pagination" class="pagination">
+        <ul>
+            <li class="prev" ng-show="data.hasPrev">
+                <a href="#">&larr; Previous</a>
+            </li>
+            <li class="prev disabled" ng-show="!data.hasPrev">
+                <a>&larr; Previous</a>
+            </li>
+            <li class="current">
+                <a>Displaying {{data.getDisplayNum}}</a>
+            </li>
+
+            <li class="next" ng-show="data.hasNext">
+                <a href="#">Next &rarr;</a>
+            </li>
+            <li class="next disabled" ng-show="!data.hasNext">
+                <a>Next &rarr;</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var page = 0,
+        sortBy = "",
+        order = "",
+        filter = "";
+
+    function RowDataCtrl($scope, $routeParams, $http) {
+        $http.get("@dataSource").success(function(data) {
+            $scope.data = data;
+
+            console.log($scope);
+        });
+    }
+
+</script>
