@@ -1,11 +1,42 @@
-@(title: MenuItem, topMenu: List[MenuItem], fields: List[DataField], dataSource: String)
+@(title: MenuItem, copyRightText: String, topMenu: List[MenuItem])
 
-@sitepages.main("administration", "title") {
-    @components.topmenu(title, topMenu, null)
+<!DOCTYPE html>
 
-    <section id="main">
-        <h1 id="homeTitle"></h1>
+<html lang="ru" ng-app="admin">
+    <head>
+        <title>Administration panel</title>
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")">
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/bootstrap-responsive.css")">
+        <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/administration.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/angular.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/bootstrap.js")" type="text/javascript"></script>
+    </head>
+    <body>
+        @components.topmenu(title, topMenu, null)
 
-        @components.ajaxtable("users", fields, dataSource)
-    </section>
-}
+        <div class="container">
+            <div ng-view>
+
+            </div>
+            <hr>
+            <footer>
+                <p>&copy; @copyRightText</p>
+            </footer>
+        </div>
+
+        <script>
+            angular.module('admin', [], function($routeProvider, $locationProvider) {
+                @for(menu <- topMenu){
+                    @if(menu.subMenu.size() == 0){
+                        $routeProvider.when('@menu.url.replace("#", "")', {
+                            templateUrl: '@routes.AdminApplication.getScreen(menu.url.replace("#/", ""))'
+                        });
+                    }
+                }
+                $routeProvider.otherwise({redirectTo: '/main'});
+            });
+        </script>
+    </body>
+</html>

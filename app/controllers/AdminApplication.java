@@ -12,6 +12,8 @@ import play.mvc.Result;
 import play.mvc.Security;
 import secure.AdminSecured;
 import views.html.adminpages.admin;
+import views.html.adminpages.usersScreen;
+import views.html.adminpages.mainScreen;
 import views.html.sitepages.login;
 
 import java.util.ArrayList;
@@ -38,7 +40,7 @@ public class AdminApplication  extends Controller {
         } else {
             SiteUser user = SiteUser.authenticate(loginForm.get().login, loginForm.get().password);
             session("adminUserId",  user.id.toString());
-            return redirect(routes.AdminApplication.index("main"));
+            return redirect(routes.AdminApplication.index());
         }
     }
 
@@ -50,28 +52,36 @@ public class AdminApplication  extends Controller {
 
     private static List<MenuItem> makeMainMenu(AdminUser user){
         List<MenuItem> menu = new ArrayList<MenuItem>();
-        menu.add(new MenuItem("Users", routes.AdminApplication.index("users")));
+        menu.add(new MenuItem("Users", "#/users"));
         MenuItem sub = new MenuItem("Manage", null);
-        sub.addSubMenuItem(new MenuItem("Roles", routes.AdminApplication.index("roles")));
-        sub.addSubMenuItem(new MenuItem("Administrators", routes.AdminApplication.index("administrators")));
+        sub.addSubMenuItem(new MenuItem("Roles", "#/roles"));
+        sub.addSubMenuItem(new MenuItem("Administrators", "#/administrators"));
         menu.add(sub);
 
+        MenuItem sub1 = new MenuItem("Variables", "#/variables");
+        menu.add(sub1);
+
         MenuItem userSubMenu = new MenuItem(user.login, null);
-        userSubMenu.addSubMenuItem(new MenuItem("Change account", routes.AdminApplication.index("account")));
+        userSubMenu.addSubMenuItem(new MenuItem("Change account", "#/account"));
         userSubMenu.addSubMenuItem(new MenuItem("divider", null));
-        userSubMenu.addSubMenuItem(new MenuItem("Logout", routes.AdminApplication.logout()));
+        userSubMenu.addSubMenuItem(new MenuItem("Logout", routes.AdminApplication.logout().url()));
         menu.add(userSubMenu);
 
         return menu;
     }
 
     @Security.Authenticated(AdminSecured.class)
-    public static Result index(String screen) {
-        AdminUser user = null;
-        if(session("adminUserId") != null && !session("adminUserId").isEmpty()){
-            user = AdminUser.find.byId(Integer.parseInt(session("adminUserId")));
+    public static Result index() {
+        AdminUser user = AdminUser.find.byId(Integer.parseInt(session("adminUserId")));
+        if(user == null){
+            return redirect(routes.AdminApplication.logout());
         }
-        MenuItem title = new MenuItem("Administration panel", routes.AdminApplication.index("main"));
+        MenuItem title = new MenuItem("Administration panel", "#/main");
+        return ok(admin.render(title, "Company Name", makeMainMenu(user)));
+    }
+
+    @Security.Authenticated(AdminSecured.class)
+    public static Result getScreen(String screen) {
 
         String table = "";
         List<DataField> fields = new ArrayList<DataField>();
@@ -82,10 +92,17 @@ public class AdminApplication  extends Controller {
             fields.add( new DataField("login", "Login"));
             fields.add( new DataField("email", "Email"));
 
-            //page = SiteUser.page(pagenum, 10, sortBy, order, filter);
-            //page.getList().get(0).getClass()
-        }
+            return ok(usersScreen.render(fields, routes.AjaxController.getTableData(table, 0, 10, "id", "asc", "").url()));
+        }if(screen.equals("variables")){
+            table = "variable";
+            fields.add( new DataField("name", "Name"));
+            fields.add( new DataField("val", "Value"));
 
-        return ok(admin.render(title, makeMainMenu(user), fields, routes.AjaxController.getTableData(table, 0, 10, "id", "asc", "").url()));
+            return ok(usersScreen.render(fields, routes.AjaxController.getTableData(table, 0, 10, "id", "asc", "").url()));
+        }else if(screen.equals("variables")){
+            return ok(mainScreen.render());
+        }else{
+            return ok(mainScreen.render());
+        }
     }
 }

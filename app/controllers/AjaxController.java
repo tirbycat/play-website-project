@@ -1,6 +1,7 @@
 package controllers;
 
 import models.SiteUser;
+import models.Variable;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 import play.libs.Json;
@@ -20,7 +21,12 @@ public class AjaxController extends Controller {
 
     @Security.Authenticated(AdminSecured.class)
     public static Result getTableData(String table, int page, int pagesize, String sortBy, String order, String filter){
-
-        return ok(SiteUser.jsonPage(page, pagesize, sortBy, order, filter));
+        if(table.equals("users")){
+            return ok(SiteUser.jsonPage(page, pagesize, sortBy, order, filter));
+        }else if(table.equals("variable")){
+            return ok(Variable.jsonPage(page, pagesize, sortBy, order, filter));
+        }else{
+            return badRequest();
+        }
     }
 }

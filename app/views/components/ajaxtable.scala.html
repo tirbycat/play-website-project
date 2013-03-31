@@ -1,26 +1,24 @@
-@(screen: String, fields: List[DataField], dataSource: String)
+@(screen: String, fields: List[DataField], dataSource: String, popupEditorId: String)
 
 @header(key:String, title:String) = {
-    <th class="@key.replace(".","_") header headerSortDown">
-        <a href="#">@title</a>
+    <th ng-click="getTable(0,'@key', ['asc','desc'][((data.order=='asc') + 0)],'');" class="header ng-class: ['', ['headerSortDown', 'headerSortUp'][((data.order=='asc') + 0)]][(data.sortBy=='@key') + 0];">
+        <a>@title</a>
     </th>
 }
-<div ng-controller="RowDataCtrl">
-    <div id="actions">
-        <form action="#" method="GET">
-            <input type="search" id="searchbox" name="filter" value="" placeholder="Filter by login...">
-            <input type="submit" id="searchsubmit" value="Filter it" class="btn primary">
-        </form>
-        <a class="btn success" id="add" href="#">Add a new </a>
-    </div>
 
-    <!--
-    <div class="well">
+<div class='row' ng-controller="RowDataCtrl">
+    <form class="form-search">
+        <div class="input-append">
+            <input type="text" class="span2 search-query" ng-model="filterStr">
+            <button type="submit" class="btn" href="" ng-click="getTable(0, '', '', filterStr)">Найти</button>
+        </div>
+    </form>
+
+    <div class="well" ng-show='data.data.length==0'>
         <em>Nothing to display</em>
     </div>
-    -->
 
-    <table class="zebra-striped">
+    <table class="table table-striped table-bordered" ng-hide='data.data.length==0'>
         <thead>
             <tr>
                 @for(field <- fields){
@@ -30,23 +28,27 @@
         </thead>
         <tbody>
             <tr ng-repeat="row in data.data">
-                <td><a href="#">{{row.id}}</a></td>
-
                 @for(col <- fields){
-                    @if(col.dataFieldName != "id"){
-                        <td>
-                            {{row.@col.dataFieldName}}
-                        </td>
+                <td>
+                    @if(col.dataFieldName == fields(0).dataFieldName){
+                        @if(popupEditorId != null){
+                            <a href="#@popupEditorId" data-toggle="modal">{{row.@col.dataFieldName}}</a>
+                        }else{
+                            <a>{{row.@col.dataFieldName}}</a>
+                        }
+                    }else{
+                        {{row.@col.dataFieldName}}
                     }
+                </td>
                 }
             </tr>
         </tbody>
     </table>
 
-    <div id="pagination" class="pagination">
+    <div id="pagination" class="row pagination" ng-hide='data.data.length==0'>
         <ul>
             <li class="prev" ng-show="data.hasPrev">
-                <a href="#">&larr; Previous</a>
+                <a href="" ng-click="getTable(-1,'','','')">&larr; Previous</a>
             </li>
             <li class="prev disabled" ng-show="!data.hasPrev">
                 <a>&larr; Previous</a>
@@ -56,7 +58,7 @@
             </li>
 
             <li class="next" ng-show="data.hasNext">
-                <a href="#">Next &rarr;</a>
+                <a href="" ng-click="getTable(1, '', '', '')">Next &rarr;</a>
             </li>
             <li class="next disabled" ng-show="!data.hasNext">
                 <a>Next &rarr;</a>
@@ -67,16 +69,33 @@
 
 <script type="text/javascript">
     var page = 0,
-        sortBy = "",
-        order = "",
+        sortBy = "@fields(0).dataFieldName",
+        order = "asc",
         filter = "";
 
     function RowDataCtrl($scope, $routeParams, $http) {
-        $http.get("@dataSource").success(function(data) {
+        $http.get("@dataSource&sort=" + sortBy, $routeParams).success(function(data) {
             $scope.data = data;
-
-            console.log($scope);
         });
+
+        $scope.getTable = function(incpage, newsort, neworder, newfilter) {
+            if(incpage !== 0){
+                page = page + incpage;
+            }
+            if(neworder !== '' && newsort == sortBy){
+                order = neworder;
+            }
+            if(newsort !== ''){
+                sortBy = newsort;
+            }
+            if(newfilter !== ''){
+                filter = newfilter;
+                page = 0;
+            }
+            $http.get("@dataSource"+"&page=" + page + "&sort=" + sortBy + "&order=" + order + "&filter=" + filter).success(function(data) {
+                $scope.data = data;
+            });
+        };
     }
 
 </script>

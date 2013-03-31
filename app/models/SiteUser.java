@@ -99,6 +99,8 @@ public class SiteUser extends Model {
 
         List<SiteUser> list = p.getList();
         result.put("data", Json.toJson(list));
+        result.put("sortBy", sortBy);
+        result.put("order", order);
         result.put("pageIndex", p.getPageIndex());
         result.put("pageCount", p.getTotalPageCount());
         result.put("hasPrev", p.hasPrev());

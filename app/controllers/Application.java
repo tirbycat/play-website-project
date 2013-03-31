@@ -65,24 +65,24 @@ public class Application extends Controller{
             user = SiteUser.find.byId(Integer.parseInt(session("userId")));
         }
 
-        MenuItem title = new MenuItem("Memo tools", routes.Application.index());
+        MenuItem title = new MenuItem("Memo tools", routes.Application.index().url());
 
         List<MenuItem> menu = new ArrayList<MenuItem>();
 
         if(user != null){
-            menu.add(new MenuItem("Bookmarks", routes.Application.index()));
+            menu.add(new MenuItem("Bookmarks", routes.Application.index().url()));
             MenuItem sub = new MenuItem("item2", null);
-            sub.addSubMenuItem(new MenuItem("item21", routes.Application.index()));
-            sub.addSubMenuItem(new MenuItem("item22", routes.Application.index()));
+            sub.addSubMenuItem(new MenuItem("item21", routes.Application.index().url()));
+            sub.addSubMenuItem(new MenuItem("item22", routes.Application.index().url()));
             menu.add(sub);
 
             MenuItem userSubMenu = new MenuItem(user.login, null);
-            userSubMenu.addSubMenuItem(new MenuItem("Account", routes.Application.index()));
+            userSubMenu.addSubMenuItem(new MenuItem("Account", routes.Application.index().url()));
             userSubMenu.addSubMenuItem(new MenuItem("divider", null));
-            userSubMenu.addSubMenuItem(new MenuItem("Logout", routes.Application.logout()));
+            userSubMenu.addSubMenuItem(new MenuItem("Logout", routes.Application.logout().url()));
             menu.add(userSubMenu);
         }else{
-            menu.add(new MenuItem("Registration", routes.Application.registration()));
+            menu.add(new MenuItem("Registration", routes.Application.registration().url()));
         }
         return ok(index.render(title, menu, user == null ? form(LoginForm.class) : null));
     }

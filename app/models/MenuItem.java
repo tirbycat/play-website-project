@@ -12,10 +12,10 @@ import java.util.List;
  */
 public class MenuItem {
     public String title;
-    public play.api.mvc.Call url;
+    public String url;
     public List<MenuItem> subMenu;
 
-    public MenuItem(String title, play.api.mvc.Call url) {
+    public MenuItem(String title, String url) {
         this.title = title;
         this.url = url;
         subMenu = new ArrayList<MenuItem>();

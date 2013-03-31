@@ -36,6 +36,12 @@ create table site_user (
   constraint pk_site_user primary key (id))
 ;
 
+create table variable (
+  name                      varchar(255) not null,
+  val                       varchar(255),
+  constraint pk_variable primary key (name))
+;
+
 create sequence account_seq;
 
 create sequence admin_role_seq;
@@ -43,6 +49,8 @@ create sequence admin_role_seq;
 create sequence admin_user_seq;
 
 create sequence site_user_seq;
+
+create sequence variable_seq;
 
 alter table account add constraint fk_account_site_user_1 foreign key (user_id) references site_user (id);
 create index ix_account_site_user_1 on account (user_id);
@@ -61,6 +69,8 @@ drop table if exists admin_user cascade;
 
 drop table if exists site_user cascade;
 
+drop table if exists variable cascade;
+
 drop sequence if exists account_seq;
 
 drop sequence if exists admin_role_seq;
@@ -68,4 +78,6 @@ drop sequence if exists admin_role_seq;
 drop sequence if exists admin_user_seq;
 
 drop sequence if exists site_user_seq;
+
+drop sequence if exists variable_seq;
 
