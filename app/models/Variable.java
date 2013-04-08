@@ -37,8 +37,8 @@ public class Variable extends Model {
         return var;
     }
 
-    public static Finder<Integer, Variable> find = new Finder<Integer, Variable>(
-            Integer.class, Variable.class
+    public static Finder<String, Variable> find = new Finder<String, Variable>(
+            String.class, Variable.class
     );
 
     /**

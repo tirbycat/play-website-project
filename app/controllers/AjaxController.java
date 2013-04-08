@@ -1,7 +1,6 @@
 package controllers;
 
-import models.SiteUser;
-import models.Variable;
+import models.*;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 import play.libs.Json;
@@ -25,6 +24,12 @@ public class AjaxController extends Controller {
             return ok(SiteUser.jsonPage(page, pagesize, sortBy, order, filter));
         }else if(table.equals("variable")){
             return ok(Variable.jsonPage(page, pagesize, sortBy, order, filter));
+        }else if(table.equals("strings")){
+            return ok(Strings.jsonPage(page, pagesize, sortBy, order, filter));
+        }else if(table.equals("roles")){
+            return ok(AdminRole.jsonPage(page, pagesize, sortBy, order, filter));
+        }else if(table.equals("administrators")){
+            return ok(AdminUser.jsonPage(page, pagesize, sortBy, order, filter));
         }else{
             return badRequest();
         }

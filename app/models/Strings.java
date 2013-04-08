@@ -6,43 +6,44 @@ import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.libs.Json;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
- * User: pzigel
- * Date: 28.03.13
- * Time: 12:26
+ * User: tirbycat
+ * Date: 31.03.13
+ * Time: 21:25
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-public class AdminRole extends Model {
-    public static final Integer ADD_USER = 0;
-
+@Table(name="strings")
+public class Strings extends Model {
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE)
-    public Integer id;
+    @Constraints.Required
+    @Column(name="str_enum")
+    public String id;
 
     @Constraints.Required
-    public String roleName;
+    @Column(name="str")
+    public String val;
 
-    @Constraints.Required
-    public String userRights;
-
-    public AdminRole(String roleName, String userRights) {
-        this.roleName = roleName;
-        this.userRights = userRights;
+    public Strings(String id, String val) {
+        this.id = id;
+        this.val = val;
     }
 
-    public static AdminRole create(String name, String permissions){
-        AdminRole role = new AdminRole(name, permissions);
-        role.save();
-        return role;
+    public static Strings create(String id, String val){
+        Strings var = new Strings(id, val);
+        var.save();
+        return var;
     }
 
-    public static Finder<Integer, AdminRole> find = new Finder<Integer, AdminRole>(
-            Integer.class, AdminRole.class
+    public static Finder<String, Strings> find = new Finder<String, Strings>(
+            String.class, Strings.class
     );
 
     /**
@@ -56,13 +57,13 @@ public class AdminRole extends Model {
      */
     public static ObjectNode jsonPage(int page, int pageSize, String sortBy, String order, String filter){
         ObjectNode result = Json.newObject();
-        Page<AdminRole> p = find.where()
-                .ilike("roleName", "%" + filter + "%")
-                .orderBy(sortBy + " " + order)
-                .findPagingList(pageSize)
-                .getPage(page);
+        Page<Strings> p = find.where()
+                            .ilike("str_enum", "%" + filter + "%")
+                            .orderBy(sortBy + " " + order)
+                            .findPagingList(pageSize)
+                            .getPage(page);
 
-        List<AdminRole> list = p.getList();
+        List<Strings> list = p.getList();
         result.put("data", Json.toJson(list));
         result.put("sortBy", sortBy);
         result.put("order", order);

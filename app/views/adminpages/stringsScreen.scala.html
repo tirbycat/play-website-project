@@ -1,0 +1,7 @@
+@(fields: List[DataField], dataSource: String)
+
+@components.ajaxtable("strings", fields, dataSource, "editWindow")
+
+@components.popup("editWindow", "title"){
+Hello Strings!
+}

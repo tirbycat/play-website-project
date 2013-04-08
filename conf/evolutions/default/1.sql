@@ -36,6 +36,12 @@ create table site_user (
   constraint pk_site_user primary key (id))
 ;
 
+create table strings (
+  str_enum                  varchar(255) not null,
+  str                       varchar(255),
+  constraint pk_strings primary key (str_enum))
+;
+
 create table variable (
   name                      varchar(255) not null,
   val                       varchar(255),
@@ -49,6 +55,8 @@ create sequence admin_role_seq;
 create sequence admin_user_seq;
 
 create sequence site_user_seq;
+
+create sequence strings_seq;
 
 create sequence variable_seq;
 
@@ -69,6 +77,8 @@ drop table if exists admin_user cascade;
 
 drop table if exists site_user cascade;
 
+drop table if exists strings cascade;
+
 drop table if exists variable cascade;
 
 drop sequence if exists account_seq;
@@ -78,6 +88,8 @@ drop sequence if exists admin_role_seq;
 drop sequence if exists admin_user_seq;
 
 drop sequence if exists site_user_seq;
+
+drop sequence if exists strings_seq;
 
 drop sequence if exists variable_seq;
 

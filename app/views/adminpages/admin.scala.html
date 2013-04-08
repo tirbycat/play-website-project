@@ -33,9 +33,20 @@
                         $routeProvider.when('@menu.url.replace("#", "")', {
                             templateUrl: '@routes.AdminApplication.getScreen(menu.url.replace("#/", ""))'
                         });
+                    }else{
+                        @for(submenu <- menu.subMenu){
+                            @if(submenu.url != null){
+                                $routeProvider.when('@submenu.url.replace("#", "")', {
+                                    templateUrl: '@routes.AdminApplication.getScreen(submenu.url.replace("#/", ""))'
+                                });
+                            }
+                        }
                     }
                 }
-                $routeProvider.otherwise({redirectTo: '/main'});
+                $routeProvider.when('@title.url.replace("#", "")', {
+                    templateUrl: '@routes.AdminApplication.getScreen(title.url.replace("#/", ""))'
+                });
+                $routeProvider.otherwise({redirectTo: '@title.url.replace("#", "")'});
             });
         </script>
     </body>

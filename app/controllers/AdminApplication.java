@@ -13,6 +13,10 @@ import play.mvc.Security;
 import secure.AdminSecured;
 import views.html.adminpages.admin;
 import views.html.adminpages.usersScreen;
+import views.html.adminpages.adminusersScreen;
+import views.html.adminpages.rolesScreen;
+import views.html.adminpages.stringsScreen;
+import views.html.adminpages.variablesScreen;
 import views.html.adminpages.mainScreen;
 import views.html.sitepages.login;
 
@@ -61,6 +65,9 @@ public class AdminApplication  extends Controller {
         MenuItem sub1 = new MenuItem("Variables", "#/variables");
         menu.add(sub1);
 
+        MenuItem sub2 = new MenuItem("Strings", "#/strings");
+        menu.add(sub2);
+
         MenuItem userSubMenu = new MenuItem(user.login, null);
         userSubMenu.addSubMenuItem(new MenuItem("Change account", "#/account"));
         userSubMenu.addSubMenuItem(new MenuItem("divider", null));
@@ -93,14 +100,33 @@ public class AdminApplication  extends Controller {
             fields.add( new DataField("email", "Email"));
 
             return ok(usersScreen.render(fields, routes.AjaxController.getTableData(table, 0, 10, "id", "asc", "").url()));
+        }else if(screen.equals("roles")){
+            table = "roles";
+            fields.add( new DataField("id", "ID"));
+            fields.add( new DataField("roleName", "Name"));
+            fields.add( new DataField("userRights", "Rights"));
+
+            return ok(rolesScreen.render(fields, routes.AjaxController.getTableData(table, 0, 10, "id", "asc", "").url()));
+        }else if(screen.equals("administrators")){
+            table = "administrators";
+            fields.add( new DataField("id", "ID"));
+            fields.add( new DataField("login", "Login"));
+            fields.add( new DataField("email", "Email"));
+            fields.add( new DataField("role_id", "Role"));
+
+            return ok(adminusersScreen.render(fields, routes.AjaxController.getTableData(table, 0, 10, "id", "asc", "").url()));
         }if(screen.equals("variables")){
             table = "variable";
             fields.add( new DataField("name", "Name"));
             fields.add( new DataField("val", "Value"));
 
-            return ok(usersScreen.render(fields, routes.AjaxController.getTableData(table, 0, 10, "id", "asc", "").url()));
-        }else if(screen.equals("variables")){
-            return ok(mainScreen.render());
+            return ok(variablesScreen.render(fields, routes.AjaxController.getTableData(table, 0, 10, "id", "asc", "").url()));
+        }else if(screen.equals("strings")){
+            table = "strings";
+            fields.add( new DataField("id", "Name"));
+            fields.add( new DataField("val", "Value"));
+
+            return ok(stringsScreen.render(fields, routes.AjaxController.getTableData(table, 0, 10, "id", "asc", "").url()));
         }else{
             return ok(mainScreen.render());
         }
