@@ -70,4 +70,12 @@ public class Variable extends Model {
 
         return result;
     }
+
+    public static ObjectNode jsonValue(String id){
+        ObjectNode result = Json.newObject();
+        Variable p = find.byId(id);
+
+        result.put("data", Json.toJson(p));
+        return result;
+    }
 }

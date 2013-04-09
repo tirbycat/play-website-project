@@ -19,19 +19,40 @@ import secure.AdminSecured;
 public class AjaxController extends Controller {
 
     @Security.Authenticated(AdminSecured.class)
-    public static Result getTableData(String table, int page, int pagesize, String sortBy, String order, String filter){
-        if(table.equals("users")){
-            return ok(SiteUser.jsonPage(page, pagesize, sortBy, order, filter));
-        }else if(table.equals("variable")){
-            return ok(Variable.jsonPage(page, pagesize, sortBy, order, filter));
-        }else if(table.equals("strings")){
+    public static Result getTableData(String table, int page, int pagesize, String sortBy, String order, String filter, String mode){
+        switch(table){
+        case "users":
+            switch(mode){
+                case "tabledata":
+                    return ok(SiteUser.jsonPage(page, pagesize, sortBy, order, filter));
+                case "windata":
+                    return ok(SiteUser.jsonPage(page, pagesize, sortBy, order, filter));
+                case "delete":
+                case "save":
+                    break;
+            }
+            break;
+        case "variable":
+            switch(mode){
+                case "tabledata":
+                    return ok(Variable.jsonPage(page, pagesize, sortBy, order, filter));
+                case "windata":
+                    return ok(Variable.jsonValue(filter));
+                case "delete":
+                case "save":
+                    break;
+            }
+            break;
+        case "strings":
             return ok(Strings.jsonPage(page, pagesize, sortBy, order, filter));
-        }else if(table.equals("roles")){
+        case "roles":
             return ok(AdminRole.jsonPage(page, pagesize, sortBy, order, filter));
-        }else if(table.equals("administrators")){
+        case "administrators":
             return ok(AdminUser.jsonPage(page, pagesize, sortBy, order, filter));
-        }else{
+        default:
             return badRequest();
         }
+
+        return badRequest();
     }
 }
