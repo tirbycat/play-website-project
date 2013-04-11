@@ -14,17 +14,18 @@
     </div>
 </div>
 <script type="text/javascript">
-
+    var recordId;
     function WinDataCtrl($scope, $routeParams, $http) {
-        $http.get("@dataSource&mode=windata&filter=sdafa", $routeParams).success(function(data) {
+        $http.get("@dataSource&mode=windata&filter=" + recordId, $routeParams).success(function(data) {
             $scope.data = data;
         });
 
-
+        $scope.$on('openWindow', function() {
+            alert('ddd');
+            $http.get("@dataSource&mode=windata&filter=" , $routeParams).success(function(data) {
+                $scope.data = data;
+            });
+            $('#@popupId').modal();
+        });
     }
-    function show@{popupId} (id){
-
-        $('#@popupId').modal();
-    }
-
 </script>

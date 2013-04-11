@@ -27,7 +27,7 @@
         </div>
 
         <script>
-            angular.module('admin', [], function($routeProvider, $locationProvider) {
+            var app = angular.module('admin', [], function($routeProvider, $locationProvider) {
                 @for(menu <- topMenu){
                     @if(menu.subMenu.size() == 0){
                         $routeProvider.when('@menu.url.replace("#", "")', {
