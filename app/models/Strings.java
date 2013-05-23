@@ -75,4 +75,12 @@ public class Strings extends Model {
 
         return result;
     }
+
+    public static ObjectNode jsonValue(String id){
+        ObjectNode result = Json.newObject();
+        Strings p = find.byId(id);
+
+        result.put("data", Json.toJson(p));
+        return result;
+    }
 }

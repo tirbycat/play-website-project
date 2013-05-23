@@ -1,31 +1,47 @@
 @(popupId: String, title: String, dataSource: String)(content: Html)
 
-<div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="modal hide fade in" id="@popupId">
+<div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="modal hide fade in" id="@popupId" ng-controller="WinDataCtrl">
     <div class="modal-header">
         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
         <h3 id="myModalLabel">@title</h3>
     </div>
-    <div class="modal-body" ng-controller="WinDataCtrl">
+    <div class="modal-body" id='editDataPopup'>
         @content
     </div>
     <div class="modal-footer">
         <button data-dismiss="modal" class="btn">Close</button>
-        <button class="btn btn-primary">Save</button>
+        <button ng-click='savedata()' class="btn btn-primary">Save</button>
     </div>
 </div>
 <script type="text/javascript">
-    var recordId;
     function WinDataCtrl($scope, $routeParams, $http) {
-        $http.get("@dataSource&mode=windata&filter=" + recordId, $routeParams).success(function(data) {
-            $scope.data = data;
-        });
-
-        $scope.$on('openWindow', function() {
-            alert('ddd');
-            $http.get("@dataSource&mode=windata&filter=" , $routeParams).success(function(data) {
+        $scope.updatedata = function(id) {
+            $http.get("@dataSource&mode=windata&filter="+id, $routeParams).success(function(data) {
                 $scope.data = data;
             });
-            $('#@popupId').modal();
-        });
+        };
+
+        $scope.savedata = function(){
+            if(window.validatePopup){
+                if(!validatePopup()){
+                    return;
+                }
+            }
+            var params='';
+            $('#editDataPopup input').each(function(index){
+                if(index!=0){
+                    params+='&';
+                }
+                params += $(this).attr('name') + "=" + $(this).val();
+            });
+            alert(params);
+            $('#@popupId').modal('hide');
+        };
+    }
+
+    function showDataEditPopup(id){
+        var scope = angular.element($("#editDataPopup")).scope();
+        scope.updatedata(id);
+        $('#@popupId').modal();
     }
 </script>

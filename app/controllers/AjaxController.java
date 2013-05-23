@@ -44,7 +44,16 @@ public class AjaxController extends Controller {
             }
             break;
         case "strings":
-            return ok(Strings.jsonPage(page, pagesize, sortBy, order, filter));
+            switch(mode){
+                case "tabledata":
+                    return ok(Strings.jsonPage(page, pagesize, sortBy, order, filter));
+                case "windata":
+                    return ok(Strings.jsonValue(filter));
+                case "delete":
+                case "save":
+                    break;
+            }
+            break;
         case "roles":
             return ok(AdminRole.jsonPage(page, pagesize, sortBy, order, filter));
         case "administrators":

@@ -92,12 +92,12 @@
                 filter = newfilter;
                 page = 0;
             }
-            $http.get("@dataSource&mode=tabledata"+"&page=" + page + "&sort=" + sortBy + "&order=" + order + "&filter=" + filter).success(function(data) {
+            $http.get("@dataSource&mode=tabledata&page=" + page + "&sort=" + sortBy + "&order=" + order + "&filter=" + filter).success(function(data) {
                 $scope.data = data;
             });
         };
         $scope.showpopup = function(id){
-            $scope.$emit('openWindow');
+            showDataEditPopup(id);
         };
     }
 
