@@ -14,9 +14,11 @@
     </div>
 </div>
 <script type="text/javascript">
+    var updateCallback;
     function WinDataCtrl($scope, $routeParams, $http) {
         $scope.updatedata = function(id) {
-            $http.get("@dataSource&mode=windata&filter="+id, $routeParams).success(function(data) {
+            $http.post("@dataSource&mode=windata&filter="+id, "{}",$routeParams).success(function(data) {
+                $scope.id = id;
                 $scope.data = data;
             });
         };
@@ -27,19 +29,20 @@
                     return;
                 }
             }
-            var params='';
+            var params = new Object();
             $('#editDataPopup input').each(function(index){
-                if(index!=0){
-                    params+='&';
-                }
-                params += $(this).attr('name') + "=" + $(this).val();
+                params[$(this).attr('name')] =  $(this).val();
             });
-            alert(params);
+            $http.post("@dataSource&mode=save", JSON.stringify(params), $routeParams).success(function(data) {
+//                $scope.data = data;
+                updateCallback();
+            });
             $('#@popupId').modal('hide');
         };
     }
 
-    function showDataEditPopup(id){
+    function showDataEditPopup(id, updCallback){
+        updateCallback = updCallback;
         var scope = angular.element($("#editDataPopup")).scope();
         scope.updatedata(id);
         $('#@popupId').modal();

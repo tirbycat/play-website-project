@@ -7,7 +7,10 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import play.data.Form;
 import secure.AdminSecured;
+
+import static play.data.Form.form;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,45 +22,51 @@ import secure.AdminSecured;
 public class AjaxController extends Controller {
 
     @Security.Authenticated(AdminSecured.class)
-    public static Result getTableData(String table, int page, int pagesize, String sortBy, String order, String filter, String mode){
+    public static Result getTableData(String table, int page, String sortBy, String order, String filter, String mode){
+//        String body = request().body().asFormUrlEncoded();
         switch(table){
         case "users":
             switch(mode){
                 case "tabledata":
-                    return ok(SiteUser.jsonPage(page, pagesize, sortBy, order, filter));
+                    return ok(SiteUser.jsonPage(page, sortBy, order, filter));
                 case "windata":
-                    return ok(SiteUser.jsonPage(page, pagesize, sortBy, order, filter));
+                    return ok(SiteUser.jsonPage(page, sortBy, order, filter));
                 case "delete":
+                    return ok(SiteUser.deleteRecord(filter));
                 case "save":
-                    break;
+                    return ok(SiteUser.editRecord(filter));
             }
             break;
         case "variable":
             switch(mode){
                 case "tabledata":
-                    return ok(Variable.jsonPage(page, pagesize, sortBy, order, filter));
+                    return ok(Variable.jsonPage(page, sortBy, order, filter));
                 case "windata":
                     return ok(Variable.jsonValue(filter));
                 case "delete":
+                    return ok(Variable.deleteRecord(filter));
                 case "save":
-                    break;
+                    Variable var =  form(Variable.class).bindFromRequest().get();
+                    return ok(Variable.editRecord(var));
             }
             break;
         case "strings":
             switch(mode){
                 case "tabledata":
-                    return ok(Strings.jsonPage(page, pagesize, sortBy, order, filter));
+                    return ok(Strings.jsonPage(page, sortBy, order, filter));
                 case "windata":
                     return ok(Strings.jsonValue(filter));
                 case "delete":
+                    return ok(Strings.deleteRecord(filter));
                 case "save":
-                    break;
+                    Strings var =  form(Strings.class).bindFromRequest().get();
+                    return ok(Strings.editRecord(var));
             }
             break;
         case "roles":
-            return ok(AdminRole.jsonPage(page, pagesize, sortBy, order, filter));
+            return ok(AdminRole.jsonPage(page, sortBy, order, filter));
         case "administrators":
-            return ok(AdminUser.jsonPage(page, pagesize, sortBy, order, filter));
+            return ok(AdminUser.jsonPage(page, sortBy, order, filter));
         default:
             return badRequest();
         }

@@ -78,24 +78,23 @@ public class SiteUser extends Model {
      * Return a page of computer
      *
      * @param page Page to display
-     * @param pageSize Number of computers per page
      * @param sortBy Computer property used for sorting
      * @param order Sort order (either or asc or desc)
      * @param filter Filter applied on the name column
      */
-    public static Page<SiteUser> page(int page, int pageSize, String sortBy, String order, String filter) {
+    public static Page<SiteUser> page(int page, String sortBy, String order, String filter) {
         return
                 find.where()
                         .ilike("login", "%" + filter + "%")
                         .orderBy(sortBy + " " + order)
                         //.fetch("accounts")
-                        .findPagingList(pageSize)
+                        .findPagingList(10)
                         .getPage(page);
     }
 
-    public static ObjectNode jsonPage(int page, int pageSize, String sortBy, String order, String filter){
+    public static ObjectNode jsonPage(int page, String sortBy, String order, String filter){
         ObjectNode result = Json.newObject();
-        Page<SiteUser> p = page(page, pageSize, sortBy, order, filter);
+        Page<SiteUser> p = page(page, sortBy, order, filter);
 
         List<SiteUser> list = p.getList();
         result.put("data", Json.toJson(list));
@@ -107,6 +106,16 @@ public class SiteUser extends Model {
         result.put("hasNext", p.hasNext());
         result.put("getDisplayNum", p.getDisplayXtoYofZ(" to "," of "));
 
+        return result;
+    }
+
+    public static ObjectNode editRecord(String filter){
+        ObjectNode result = Json.newObject();
+        return result;
+    }
+
+    public static ObjectNode deleteRecord(String filter){
+        ObjectNode result = Json.newObject();
         return result;
     }
 }

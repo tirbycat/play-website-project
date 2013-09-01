@@ -71,17 +71,16 @@ public class AdminUser extends Model {
      * Return a page
      *
      * @param page Page to display
-     * @param pageSize Number of computers per page
      * @param sortBy Computer property used for sorting
      * @param order Sort order (either or asc or desc)
      * @param filter Filter applied on the name column
      */
-    public static ObjectNode jsonPage(int page, int pageSize, String sortBy, String order, String filter){
+    public static ObjectNode jsonPage(int page, String sortBy, String order, String filter){
         ObjectNode result = Json.newObject();
         Page<AdminUser> p = find.where()
                 .ilike("login", "%" + filter + "%")
                 .orderBy(sortBy + " " + order)
-                .findPagingList(pageSize)
+                .findPagingList(10)
                 .getPage(page);
 
         List<AdminUser> list = p.getList();

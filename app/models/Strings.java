@@ -50,17 +50,16 @@ public class Strings extends Model {
      * Return a page of computer
      *
      * @param page Page to display
-     * @param pageSize Number of computers per page
      * @param sortBy Computer property used for sorting
      * @param order Sort order (either or asc or desc)
      * @param filter Filter applied on the name column
      */
-    public static ObjectNode jsonPage(int page, int pageSize, String sortBy, String order, String filter){
+    public static ObjectNode jsonPage(int page, String sortBy, String order, String filter){
         ObjectNode result = Json.newObject();
         Page<Strings> p = find.where()
                             .ilike("str_enum", "%" + filter + "%")
                             .orderBy(sortBy + " " + order)
-                            .findPagingList(pageSize)
+                            .findPagingList(10)
                             .getPage(page);
 
         List<Strings> list = p.getList();
@@ -81,6 +80,21 @@ public class Strings extends Model {
         Strings p = find.byId(id);
 
         result.put("data", Json.toJson(p));
+        return result;
+    }
+
+    public static ObjectNode editRecord(Strings object){
+        ObjectNode result = Json.newObject();
+
+        object.update();
+        return result;
+    }
+
+    public static ObjectNode deleteRecord(String id){
+        ObjectNode result = Json.newObject();
+
+        Strings.find.ref(id).delete();
+
         return result;
     }
 }

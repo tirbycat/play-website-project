@@ -45,17 +45,16 @@ public class Variable extends Model {
      * Return a page of computer
      *
      * @param page Page to display
-     * @param pageSize Number of computers per page
      * @param sortBy Computer property used for sorting
      * @param order Sort order (either or asc or desc)
      * @param filter Filter applied on the name column
      */
-    public static ObjectNode jsonPage(int page, int pageSize, String sortBy, String order, String filter){
+    public static ObjectNode jsonPage(int page, String sortBy, String order, String filter){
         ObjectNode result = Json.newObject();
         Page<Variable> p = find.where()
                             .ilike("name", "%" + filter + "%")
                             .orderBy(sortBy + " " + order)
-                            .findPagingList(pageSize)
+                            .findPagingList(10)
                             .getPage(page);
 
         List<Variable> list = p.getList();
@@ -76,6 +75,18 @@ public class Variable extends Model {
         Variable p = find.byId(id);
 
         result.put("data", Json.toJson(p));
+        return result;
+    }
+
+    public static ObjectNode editRecord(Variable object){
+        ObjectNode result = Json.newObject();
+
+        object.update();
+        return result;
+    }
+
+    public static ObjectNode deleteRecord(String filter){
+        ObjectNode result = Json.newObject();
         return result;
     }
 }

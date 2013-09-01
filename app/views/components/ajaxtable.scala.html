@@ -1,4 +1,4 @@
-@(screen: String, fields: List[DataField], dataSource: String, popupEditorId: String)
+@(screen: String, fields: List[DataField], dataSource: String, popupEditorId: String, canDelete: Boolean)
 
 @header(key:String, title:String) = {
     <th ng-click="getTable(0,'@key', ['asc','desc'][((data.order=='asc') + 0)],'');" class="header ng-class: ['', ['headerSortDown', 'headerSortUp'][((data.order=='asc') + 0)]][(data.sortBy=='@key') + 0];">
@@ -10,7 +10,8 @@
     <form class="form-search">
         <div class="input-append">
             <input type="text" class="span2 search-query" ng-model="filterStr">
-            <button type="submit" class="btn" href="" ng-click="getTable(0, '', '', filterStr)">Найти</button>
+            <button type="submit" class="btn fixed-btn" href="" ng-click="getTable(0, '', '', filterStr)">Найти</button>
+            <button class="btn" type="button" href="" ng-click="resetFilter()">Очистить</button>
         </div>
     </form>
 
@@ -23,6 +24,10 @@
             <tr>
                 @for(field <- fields){
                     @header(field.dataFieldName, field.dataFieldCaption)
+                }
+                @if(canDelete){
+                    <th>
+                    </th>
                 }
             </tr>
         </thead>
@@ -39,6 +44,11 @@
                     }else{
                         {{row.@col.dataFieldName}}
                     }
+                </td>
+                }
+                @if(canDelete){
+                <td class="span1">
+                    <button class="btn btn-danger" type="button" href="" ng-click="deleteRecord(row.@fields(0).dataFieldName)">Delete</button>
                 </td>
                 }
             </tr>
@@ -74,7 +84,7 @@
         filter = "";
 
     function RowDataCtrl($scope, $routeParams, $http) {
-        $http.get("@dataSource&mode=tabledata&sort=" + sortBy, $routeParams).success(function(data) {
+        $http.post("@dataSource" + "&mode=tabledata&sort=" + sortBy, "{}", $routeParams).success(function(data) {
             $scope.data = data;
         });
 
@@ -92,12 +102,26 @@
                 filter = newfilter;
                 page = 0;
             }
-            $http.get("@dataSource&mode=tabledata&page=" + page + "&sort=" + sortBy + "&order=" + order + "&filter=" + filter).success(function(data) {
+            $http.post("@dataSource&mode=tabledata&page=" + page + "&sort=" + sortBy + "&order=" + order + "&filter=" + filter, "{}").success(function(data) {
                 $scope.data = data;
             });
         };
+        $scope.resetFilter = function(){
+            page = 0;
+            filter = '';
+            $scope.filterStr = '';
+            $scope.getTable(0, '', '', '');
+        }
+        $scope.update = function(){
+            $scope.getTable(0, sortBy, order, filter);
+        }
+        $scope.deleteRecord = function(id){
+            $http.post("@dataSource&mode=delete" + "&filter=" + id, "{}", $routeParams).success(function(data) {
+                $scope.update();
+            });
+        }
         $scope.showpopup = function(id){
-            showDataEditPopup(id);
+            showDataEditPopup(id, $scope.update);
         };
     }
 

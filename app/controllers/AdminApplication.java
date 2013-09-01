@@ -99,14 +99,14 @@ public class AdminApplication  extends Controller {
             fields.add( new DataField("login", "Login"));
             fields.add( new DataField("email", "Email"));
 
-            return ok(usersScreen.render(fields, routes.AjaxController.getTableData(table, 0, 10, "id", "asc", "", "").url()));
+            return ok(usersScreen.render(fields, routes.AjaxController.getTableData(table, 0, "id", "asc", "", "").url()));
         }else if(screen.equals("roles")){
             table = "roles";
             fields.add( new DataField("id", "ID"));
             fields.add( new DataField("roleName", "Name"));
             fields.add( new DataField("userRights", "Rights"));
 
-            return ok(rolesScreen.render(fields, routes.AjaxController.getTableData(table, 0, 10, "id", "asc", "", "").url()));
+            return ok(rolesScreen.render(fields, routes.AjaxController.getTableData(table, 0, "id", "asc", "", "").url()));
         }else if(screen.equals("administrators")){
             table = "administrators";
             fields.add( new DataField("id", "ID"));
@@ -114,19 +114,19 @@ public class AdminApplication  extends Controller {
             fields.add( new DataField("email", "Email"));
             fields.add( new DataField("role_id", "Role"));
 
-            return ok(adminusersScreen.render(fields, routes.AjaxController.getTableData(table, 0, 10, "id", "asc", "", "").url()));
+            return ok(adminusersScreen.render(fields, routes.AjaxController.getTableData(table, 0, "id", "asc", "", "").url()));
         }if(screen.equals("variables")){
             table = "variable";
             fields.add( new DataField("name", "Name"));
             fields.add( new DataField("val", "Value"));
 
-            return ok(variablesScreen.render(fields, routes.AjaxController.getTableData(table, 0, 10, "id", "asc", "", "").url()));
+            return ok(variablesScreen.render(fields, routes.AjaxController.getTableData(table, 0, "id", "asc", "", "").url()));
         }else if(screen.equals("strings")){
             table = "strings";
             fields.add( new DataField("id", "Name"));
             fields.add( new DataField("val", "Value"));
 
-            return ok(stringsScreen.render(fields, routes.AjaxController.getTableData(table, 0, 10, "id", "asc", "", "").url()));
+            return ok(stringsScreen.render(fields, routes.AjaxController.getTableData(table, 0, "id", "asc", "", "").url()));
         }else{
             return ok(mainScreen.render());
         }

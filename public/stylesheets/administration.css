@@ -96,3 +96,10 @@ table .header a {
 #pagination ul .current a {
     color: #666;
 }
+
+.form-search .input-append .fixed-btn, .form-search .input-prepend .fixed-btn {
+    margin-left: -1px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
