@@ -1,7 +1,40 @@
 @(fields: List[DataField], dataSource: String)
 
-@components.ajaxtable("roles", fields, dataSource, "editWindow", true)
+@components.ajaxtable("roles", fields, dataSource, "editWindow", true, true)
 
-@components.popup("editWindow", "title", dataSource){
-Hello Roles!
+@components.popup("editWindow", "Administrator role", dataSource){
+<div class="control-group">
+    <input type="hidden" name='id' value="{{data.data.id}}">
+    <label class="control-label" for="varValue">Role name</label>
+    <div class="controls">
+        <input type="text" name="roleName" placeholder="String value" ng-model="data.data.roleName">
+    </div>
+
+    @for(privilege <- AdminRole.Privilegies.values()){
+        <label class="checkbox">
+            <input type="checkbox" class="privilegies" name="@privilege" ng-checked="[false, true][data.data.userRights[@privilege.ordinal()]]">
+            @privilege
+        </label>
+    }
+</div>
+<script>
+    function parseFormToJSONObject(){
+        var userRights = '';
+        @for(privilege <- AdminRole.Privilegies.values()){
+            if($('[name="@privilege"]').prop('checked')){
+                userRights = userRights + "1";
+            }else{
+                userRights = userRights + "0";
+            }
+        }
+        var params = new Object();
+        $('#editDataPopup input:not(.privilegies)').each(function(index){
+            params[$(this).attr('name')] =  $(this).val();
+        });
+
+        params['userRights'] = userRights;
+
+        return params;
+    }
+</script>
 }

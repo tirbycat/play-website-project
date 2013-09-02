@@ -18,10 +18,18 @@ import java.util.List;
  */
 @Entity
 public class AdminRole extends Model {
-    public static final Integer ADD_USER = 0;
+    public enum Privilegies{
+        EDIT_ROLES,
+        EDIT_ADMINISTRATORS,
+        EDIT_VARIABLES,
+        EDIT_STRINGS,
+        EDIT_USERS
+    };
+//      Privilegies.values();
+//    public static final Integer ADD_USER = 0;
 
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     public Integer id;
 
     @Constraints.Required
@@ -29,6 +37,11 @@ public class AdminRole extends Model {
 
     @Constraints.Required
     public String userRights;
+
+    public AdminRole() {
+        this.roleName = "";
+        this.userRights = "";
+    }
 
     public AdminRole(String roleName, String userRights) {
         this.roleName = roleName;
@@ -70,6 +83,37 @@ public class AdminRole extends Model {
         result.put("hasPrev", p.hasPrev());
         result.put("hasNext", p.hasNext());
         result.put("getDisplayNum", p.getDisplayXtoYofZ(" to "," of "));
+
+        return result;
+    }
+
+    public static ObjectNode jsonValue(String id){
+        ObjectNode result = Json.newObject();
+        AdminRole p;
+        if(id.equals("new")){
+            p=new AdminRole();
+        }else{
+            p = find.byId(Integer.parseInt(id));
+        }
+
+        result.put("data", Json.toJson(p));
+        return result;
+    }
+
+    public static ObjectNode editRecord(AdminRole object){
+        ObjectNode result = Json.newObject();
+        if(object.id != null){
+            object.update();
+        }else{
+            object.save();
+        }
+
+        return result;
+    }
+
+    public static ObjectNode deleteRecord(String id){
+        ObjectNode result = Json.newObject();
+        AdminRole.find.ref(Integer.parseInt(id)).delete();
 
         return result;
     }

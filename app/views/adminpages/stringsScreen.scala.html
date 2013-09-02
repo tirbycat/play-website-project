@@ -1,6 +1,6 @@
 @(fields: List[DataField], dataSource: String)
 
-@components.ajaxtable("strings", fields, dataSource, "editWindow", true)
+@components.ajaxtable("strings", fields, dataSource, "editWindow", false, false)
 
 @components.popup("editWindow", "Edit strings", dataSource){
 <div class="control-group">

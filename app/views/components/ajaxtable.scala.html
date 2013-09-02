@@ -1,4 +1,4 @@
-@(screen: String, fields: List[DataField], dataSource: String, popupEditorId: String, canDelete: Boolean)
+@(screen: String, fields: List[DataField], dataSource: String, popupEditorId: String, canAdd: Boolean, canDelete: Boolean)
 
 @header(key:String, title:String) = {
     <th ng-click="getTable(0,'@key', ['asc','desc'][((data.order=='asc') + 0)],'');" class="header ng-class: ['', ['headerSortDown', 'headerSortUp'][((data.order=='asc') + 0)]][(data.sortBy=='@key') + 0];">
@@ -13,7 +13,11 @@
             <button type="submit" class="btn fixed-btn" href="" ng-click="getTable(0, '', '', filterStr)">Найти</button>
             <button class="btn" type="button" href="" ng-click="resetFilter()">Очистить</button>
         </div>
+        @if(canAdd){
+            <button type="submit" class="btn pull-right" href="" ng-click="showpopup('new')">Добавить</button>
+        }
     </form>
+
 
     <div class="well" ng-show='data.data.length==0'>
         <em>Nothing to display</em>

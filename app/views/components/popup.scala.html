@@ -15,9 +15,19 @@
 </div>
 <script type="text/javascript">
     var updateCallback;
+    var previd;
     function WinDataCtrl($scope, $routeParams, $http) {
         $scope.updatedata = function(id) {
             $http.post("@dataSource&mode=windata&filter="+id, "{}",$routeParams).success(function(data) {
+
+                if(id != previd)
+                {
+                    $('#editDataPopup input').each(function(index){
+                        $(this).val('');
+                        $(this).prop('checked', false);
+                    });
+                    previd = id;
+                }
                 $scope.id = id;
                 $scope.data = data;
             });
@@ -30,9 +40,15 @@
                 }
             }
             var params = new Object();
-            $('#editDataPopup input').each(function(index){
-                params[$(this).attr('name')] =  $(this).val();
-            });
+
+            if(window.parseFormToJSONObject){
+                params = parseFormToJSONObject();
+            }else{
+                $('#editDataPopup input').each(function(index){
+                    params[$(this).attr('name')] =  $(this).val();
+                });
+            }
+
             $http.post("@dataSource&mode=save", JSON.stringify(params), $routeParams).success(function(data) {
 //                $scope.data = data;
                 updateCallback();

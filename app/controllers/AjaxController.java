@@ -64,7 +64,18 @@ public class AjaxController extends Controller {
             }
             break;
         case "roles":
-            return ok(AdminRole.jsonPage(page, sortBy, order, filter));
+            switch(mode){
+                case "tabledata":
+                    return ok(AdminRole.jsonPage(page, sortBy, order, filter));
+                case "windata":
+                    return ok(AdminRole.jsonValue(filter));
+                case "delete":
+                    return ok(AdminRole.deleteRecord(filter));
+                case "save":
+                    AdminRole var =  form(AdminRole.class).bindFromRequest().get();
+                    return ok(AdminRole.editRecord(var));
+            }
+            break;
         case "administrators":
             return ok(AdminUser.jsonPage(page, sortBy, order, filter));
         default:

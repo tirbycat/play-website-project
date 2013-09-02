@@ -1,6 +1,6 @@
 @(fields: List[DataField], dataSource: String)
 
-@components.ajaxtable("users", fields, dataSource, "editWindow", true)
+@components.ajaxtable("users", fields, dataSource, "editWindow", false, true)
 
 @components.popup("editWindow", "title", dataSource){
     Hello Universe!
