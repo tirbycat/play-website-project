@@ -16,6 +16,7 @@ GET     /admimistration/screens/:id controllers.AdminApplication.getScreen(id :S
 GET     /admimistration/login       controllers.AdminApplication.login()
 POST    /admimistration/auth        controllers.AdminApplication.authenticate()
 GET     /admimistration/logout      controllers.AdminApplication.logout()
+POST    /admimistration/passchange  controllers.AdminApplication.changePassword()
 
 # Ajax controllers
 # GET    /admimistration/gettable    controllers.AjaxController.getTableData(table: String ?= "", page:Int ?=0, sort ?="id", order ?="asc", filter ?="", mode ?="")

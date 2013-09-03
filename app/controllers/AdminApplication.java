@@ -1,6 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Page;
+import forms.ChangePasswordForm;
 import forms.LoginForm;
 import models.AdminUser;
 import models.DataField;
@@ -18,6 +19,7 @@ import views.html.adminpages.rolesScreen;
 import views.html.adminpages.stringsScreen;
 import views.html.adminpages.variablesScreen;
 import views.html.adminpages.mainScreen;
+import views.html.adminpages.accountScreen;
 import views.html.sitepages.login;
 
 import java.util.ArrayList;
@@ -42,10 +44,20 @@ public class AdminApplication  extends Controller {
         if (loginForm.hasErrors()) {
             return badRequest(login.render(loginForm, true, routes.AdminApplication.authenticate()));
         } else {
-            SiteUser user = SiteUser.authenticate(loginForm.get().login, loginForm.get().password);
+            AdminUser user = AdminUser.authenticate(loginForm.get().login, loginForm.get().password);
             session("adminUserId",  user.id.toString());
             return redirect(routes.AdminApplication.index());
         }
+    }
+
+    public static Result changePassword() {
+        Form<ChangePasswordForm> passForm = form(ChangePasswordForm.class).bindFromRequest();
+        if (passForm.hasErrors()) {
+            return ok(passForm.errorsAsJson());
+        } else {
+            AdminUser.changePassword(Integer.parseInt(session("adminUserId")), passForm.get().password1);
+        }
+        return ok("ok");
     }
 
     public static Result logout() {
@@ -112,7 +124,7 @@ public class AdminApplication  extends Controller {
             fields.add( new DataField("id", "ID"));
             fields.add( new DataField("login", "Login"));
             fields.add( new DataField("email", "Email"));
-            fields.add( new DataField("role_id", "Role"));
+            fields.add( new DataField("role.roleName", "Role"));
 
             return ok(adminusersScreen.render(fields, routes.AjaxController.getTableData(table, 0, "id", "asc", "", "").url()));
         }if(screen.equals("variables")){
@@ -127,6 +139,8 @@ public class AdminApplication  extends Controller {
             fields.add( new DataField("val", "Value"));
 
             return ok(stringsScreen.render(fields, routes.AjaxController.getTableData(table, 0, "id", "asc", "", "").url()));
+        }else if(screen.equals("account")){
+            return ok(accountScreen.render());
         }else{
             return ok(mainScreen.render());
         }

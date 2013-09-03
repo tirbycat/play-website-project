@@ -25,8 +25,6 @@ public class AdminRole extends Model {
         EDIT_STRINGS,
         EDIT_USERS
     };
-//      Privilegies.values();
-//    public static final Integer ADD_USER = 0;
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -85,6 +83,11 @@ public class AdminRole extends Model {
         result.put("getDisplayNum", p.getDisplayXtoYofZ(" to "," of "));
 
         return result;
+    }
+
+    public static List<AdminRole> getRoles(){
+        List<AdminRole> roles = find.all();
+        return roles;
     }
 
     public static ObjectNode jsonValue(String id){

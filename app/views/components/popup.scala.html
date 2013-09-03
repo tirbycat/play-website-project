@@ -44,7 +44,7 @@
             if(window.parseFormToJSONObject){
                 params = parseFormToJSONObject();
             }else{
-                $('#editDataPopup input').each(function(index){
+                $('#editDataPopup :input').each(function(index){
                     params[$(this).attr('name')] =  $(this).val();
                 });
             }

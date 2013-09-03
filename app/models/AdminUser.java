@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Page;
+import forms.AdminUserForm;
 import org.codehaus.jackson.node.ObjectNode;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
@@ -20,7 +21,7 @@ import java.util.List;
 @Entity
 public class AdminUser extends Model {
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     public Integer id;
 
     @Constraints.Required
@@ -41,6 +42,9 @@ public class AdminUser extends Model {
     @OneToOne(targetEntity=AdminRole.class,cascade=CascadeType.ALL)
     @JoinColumn(name="role_id",referencedColumnName="id")
     public AdminRole role;
+
+    public AdminUser() {
+    }
 
     public AdminUser(String login, String email, String password) {
         this.login = login;
@@ -95,4 +99,56 @@ public class AdminUser extends Model {
 
         return result;
     }
+
+    public static ObjectNode jsonValue(String id){
+        ObjectNode result = Json.newObject();
+        AdminUser p;
+        if(id.equals("new")){
+            p=new AdminUser();
+        }else{
+            p = find.byId(Integer.parseInt(id));
+        }
+
+        result.put("data", Json.toJson(p));
+        return result;
+    }
+
+    public static ObjectNode editRecord(AdminUserForm object){
+        ObjectNode result = Json.newObject();
+        if(object.id != null){
+            AdminUser au = AdminUser.find.ref(object.id);
+            au.login = object.login;
+            au.email = object.email;
+//            if(!object.password.isEmpty()){
+//                au.password = Md5Hash.md5(object.password);
+//            }
+            if(object.roleId != 0 ){
+                au.role = AdminRole.find.byId(object.roleId);
+            }
+            au.update();
+        }else{
+            AdminUser au = new AdminUser(object.login, object.email, object.password);
+            if(object.roleId != 0 ){
+                au.role = AdminRole.find.byId(object.roleId);
+            }
+            au.save();
+        }
+
+        return result;
+    }
+
+    public static void changePassword(Integer id, String password){
+        AdminUser au = AdminUser.find.ref(id);
+        au.password = Md5Hash.md5(password);
+        au.update();
+    }
+
+    public static ObjectNode deleteRecord(String id){
+        ObjectNode result = Json.newObject();
+        AdminUser.find.ref(Integer.parseInt(id)).delete();
+
+        return result;
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package forms;
 
+import models.AdminUser;
 import models.SiteUser;
 
 /**
@@ -14,7 +15,7 @@ public class LoginForm {
     public String password;
 
     public String validate() {
-        if (SiteUser.authenticate(login, password) == null) {
+        if (AdminUser.authenticate(login, password) == null) {
             return "Invalid user or password";
         }
         return null;

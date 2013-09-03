@@ -1,5 +1,6 @@
 package controllers;
 
+import forms.AdminUserForm;
 import models.*;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
@@ -23,7 +24,6 @@ public class AjaxController extends Controller {
 
     @Security.Authenticated(AdminSecured.class)
     public static Result getTableData(String table, int page, String sortBy, String order, String filter, String mode){
-//        String body = request().body().asFormUrlEncoded();
         switch(table){
         case "users":
             switch(mode){
@@ -77,7 +77,18 @@ public class AjaxController extends Controller {
             }
             break;
         case "administrators":
-            return ok(AdminUser.jsonPage(page, sortBy, order, filter));
+            switch(mode){
+                case "tabledata":
+                    return ok(AdminUser.jsonPage(page, sortBy, order, filter));
+                case "windata":
+                    return ok(AdminUser.jsonValue(filter));
+                case "delete":
+                    return ok(AdminUser.deleteRecord(filter));
+                case "save":
+                    AdminUserForm var =  form(AdminUserForm.class).bindFromRequest().get();
+                    return ok(AdminUser.editRecord(var));
+            }
+            break;
         default:
             return badRequest();
         }
