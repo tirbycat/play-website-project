@@ -5,27 +5,10 @@
 @components.popup("editWindow", "Edit administrator", dataSource){
 <div class="control-group">
     <input type="hidden" name='id' value="{{data.data.id}}">
-    <label class="control-label" for="login">Login</label>
-    <div class="controls">
-        <input type="text" name="login" placeholder="Login" ng-model="data.data.login">
-    </div>
-    <label class="control-label" for="email">Email</label>
-    <div class="controls">
-        <input type="text" name="email" placeholder="Email" ng-model="data.data.email">
-    </div>
-    <label class="control-label" for="password">Password</label>
-    <div class="controls">
-        <input type="text" name="password" placeholder="Password" ng-disabled="data.data.id!=null">
-    </div>
+    @components.textbox("login", "Login", "data.data.login", "")
+    @components.textbox("email", "Email", "data.data.email", "")
 
-    <label class="control-label" for="role">Admin role</label>
-    <div class="controls">
-        <select name="roleId">
-            <option value="" ng-selected="data.data.role == null"></option>
-            @for(role <- AdminRole.getRoles()){
-                <option value="@role.id" ng-selected="data.data.role.id==@role.id">@role.roleName</option>
-            }
-        </select>
-    </div>
+    @components.textbox("password", "Password", "", "data.data.id!=null")
+    @components.listbox("roleId", "AdminRole", "data.data.role", "roleName")
 </div>
 }

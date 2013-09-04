@@ -9,6 +9,7 @@ import utils.Md5Hash;
 
 import javax.persistence.*;
 import java.util.List;
+import static play.data.Form.form;
 
 /**
  * Created with IntelliJ IDEA.
@@ -49,7 +50,7 @@ public class Variable extends Model {
      * @param order Sort order (either or asc or desc)
      * @param filter Filter applied on the name column
      */
-    public static ObjectNode jsonPage(int page, String sortBy, String order, String filter){
+    public static ObjectNode jsonPage(Integer page, String sortBy, String order, String filter){
         ObjectNode result = Json.newObject();
         Page<Variable> p = find.where()
                             .ilike("name", "%" + filter + "%")
@@ -78,10 +79,10 @@ public class Variable extends Model {
         return result;
     }
 
-    public static ObjectNode editRecord(Variable object){
+    public static ObjectNode editRecord(){
         ObjectNode result = Json.newObject();
-
-        object.update();
+        Variable var =  form(Variable.class).bindFromRequest().get();
+        var.update();
         return result;
     }
 

@@ -59,7 +59,7 @@ public class Account extends Model{
      * @param order Sort order (either or asc or desc)
      * @param filter Filter applied on the name column
      */
-    public static Page<Account> page(int page, String sortBy, String order, String filter) {
+    public static Page<Account> page(Integer page, String sortBy, String order, String filter) {
         return
                 find.where()
                         .ilike("name", "%" + filter + "%")

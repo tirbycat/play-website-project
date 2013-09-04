@@ -1,0 +1,9 @@
+@(elementId: String, listDataSource: String, jsDataSource: String, caption: String)
+
+<label class="control-label" for="@elementId">Admin role</label>
+<div class="controls">
+    <select name="@elementId" ng-init="getListByFilter('@listDataSource', '')">
+        <option value="" ng-selected="@jsDataSource == null"></option>
+            <option ng-repeat="row in @(listDataSource).data" value="{{row.id}}" ng-selected="@(jsDataSource).id==row.id">{{row.@(caption)}}</option>
+    </select>
+</div>

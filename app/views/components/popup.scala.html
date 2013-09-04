@@ -17,6 +17,11 @@
     var updateCallback;
     var previd;
     function WinDataCtrl($scope, $routeParams, $http) {
+        $scope.getListByFilter = function(listName, filter){
+            $http.get("/admimistration/listboxdata?list=" + listName + "&filter=" + filter, $routeParams).success(function(data) {
+                $scope[listName] = data;
+            });
+        };
         $scope.updatedata = function(id) {
             $http.post("@dataSource&mode=windata&filter="+id, "{}",$routeParams).success(function(data) {
 
@@ -32,7 +37,6 @@
                 $scope.data = data;
             });
         };
-
         $scope.savedata = function(){
             if(window.validatePopup){
                 if(!validatePopup()){

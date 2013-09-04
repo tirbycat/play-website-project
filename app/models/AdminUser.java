@@ -10,6 +10,7 @@ import utils.Md5Hash;
 
 import javax.persistence.*;
 import java.util.List;
+import static play.data.Form.form;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,7 +20,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-public class AdminUser extends Model {
+public class AdminUser extends Model{
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     public Integer id;
@@ -79,7 +80,7 @@ public class AdminUser extends Model {
      * @param order Sort order (either or asc or desc)
      * @param filter Filter applied on the name column
      */
-    public static ObjectNode jsonPage(int page, String sortBy, String order, String filter){
+    public static ObjectNode jsonPage(Integer page, String sortBy, String order, String filter){
         ObjectNode result = Json.newObject();
         Page<AdminUser> p = find.where()
                 .ilike("login", "%" + filter + "%")
@@ -113,15 +114,14 @@ public class AdminUser extends Model {
         return result;
     }
 
-    public static ObjectNode editRecord(AdminUserForm object){
+    public static ObjectNode editRecord(){
         ObjectNode result = Json.newObject();
+        AdminUserForm object =  form(AdminUserForm.class).bindFromRequest().get();
         if(object.id != null){
             AdminUser au = AdminUser.find.ref(object.id);
             au.login = object.login;
             au.email = object.email;
-//            if(!object.password.isEmpty()){
-//                au.password = Md5Hash.md5(object.password);
-//            }
+
             if(object.roleId != 0 ){
                 au.role = AdminRole.find.byId(object.roleId);
             }
@@ -149,6 +149,4 @@ public class AdminUser extends Model {
 
         return result;
     }
-
-
 }

@@ -1,4 +1,6 @@
+@(elementId: String, caption: String, jsDataSource: String)
+
 <label class="checkbox">
-    <input type="checkbox" class="privilegies" name="@privilege" ng-checked="[false, true][data.data.userRights[@privilege.ordinal()]]">
-    @privilege
+    <input type="checkbox" name="@elementId" ng-checked="@jsDataSource">
+    @caption
 </label>

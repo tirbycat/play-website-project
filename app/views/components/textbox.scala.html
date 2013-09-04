@@ -1,0 +1,6 @@
+@(elementId: String, caption: String, jsDataSource: String, disabledCondition: String)
+
+<label class="control-label" for="@elementId">@caption</label>
+<div class="controls">
+    <input type="text" name="@elementId" placeholder="@caption" @if(!jsDataSource.isEmpty()){ng-model="@jsDataSource"} @if(!disabledCondition.isEmpty()){ng-disabled="@disabledCondition"}>
+</div>

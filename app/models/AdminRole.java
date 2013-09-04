@@ -8,6 +8,7 @@ import play.libs.Json;
 
 import javax.persistence.*;
 import java.util.List;
+import static play.data.Form.form;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,7 +18,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-public class AdminRole extends Model {
+public class AdminRole extends Model{
     public enum Privilegies{
         EDIT_ROLES,
         EDIT_ADMINISTRATORS,
@@ -64,7 +65,7 @@ public class AdminRole extends Model {
      * @param order Sort order (either or asc or desc)
      * @param filter Filter applied on the name column
      */
-    public static ObjectNode jsonPage(int page, String sortBy, String order, String filter){
+    public static ObjectNode jsonPage(Integer page, String sortBy, String order, String filter){
         ObjectNode result = Json.newObject();
         Page<AdminRole> p = find.where()
                 .ilike("roleName", "%" + filter + "%")
@@ -85,9 +86,11 @@ public class AdminRole extends Model {
         return result;
     }
 
-    public static List<AdminRole> getRoles(){
+    public static ObjectNode toList(String filter){
+        ObjectNode result = Json.newObject();
         List<AdminRole> roles = find.all();
-        return roles;
+        result.put("data", Json.toJson(roles));
+        return result;
     }
 
     public static ObjectNode jsonValue(String id){
@@ -103,8 +106,9 @@ public class AdminRole extends Model {
         return result;
     }
 
-    public static ObjectNode editRecord(AdminRole object){
+    public static ObjectNode editRecord(){
         ObjectNode result = Json.newObject();
+        AdminRole object =  form(AdminRole.class).bindFromRequest().get();
         if(object.id != null){
             object.update();
         }else{

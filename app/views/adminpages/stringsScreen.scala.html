@@ -3,11 +3,8 @@
 @components.ajaxtable("strings", fields, dataSource, "editWindow", false, false)
 
 @components.popup("editWindow", "Edit strings", dataSource){
-<div class="control-group">
-    <input type="hidden" name='id' value="{{data.data.id}}">
-    <label class="control-label" for="varValue">Value of string "{{data.data.id}}"</label>
-    <div class="controls">
-        <input type="text" name="val" placeholder="String value" ng-model="data.data.val">
+    <div class="control-group">
+        <input type="hidden" name='id' value="{{data.data.id}}">
+        @components.textbox("val", "Value of string '{{data.data.id}}'", "data.data.val", "")
     </div>
-</div>
 }

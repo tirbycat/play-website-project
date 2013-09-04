@@ -50,16 +50,6 @@ public class AdminApplication  extends Controller {
         }
     }
 
-    public static Result changePassword() {
-        Form<ChangePasswordForm> passForm = form(ChangePasswordForm.class).bindFromRequest();
-        if (passForm.hasErrors()) {
-            return ok(passForm.errorsAsJson());
-        } else {
-            AdminUser.changePassword(Integer.parseInt(session("adminUserId")), passForm.get().password1);
-        }
-        return ok("ok");
-    }
-
     public static Result logout() {
         session().clear();
         flash("success", "You've been logged out");
@@ -106,21 +96,21 @@ public class AdminApplication  extends Controller {
         List<DataField> fields = new ArrayList<DataField>();
         Page<SiteUser> page = null;
         if(screen.equals("users")){
-            table = "users";
+            table = "SiteUser";
             fields.add( new DataField("id", "ID"));
             fields.add( new DataField("login", "Login"));
             fields.add( new DataField("email", "Email"));
 
             return ok(usersScreen.render(fields, routes.AjaxController.getTableData(table, 0, "id", "asc", "", "").url()));
         }else if(screen.equals("roles")){
-            table = "roles";
+            table = "AdminRole";
             fields.add( new DataField("id", "ID"));
             fields.add( new DataField("roleName", "Name"));
             fields.add( new DataField("userRights", "Rights"));
 
             return ok(rolesScreen.render(fields, routes.AjaxController.getTableData(table, 0, "id", "asc", "", "").url()));
         }else if(screen.equals("administrators")){
-            table = "administrators";
+            table = "AdminUser";
             fields.add( new DataField("id", "ID"));
             fields.add( new DataField("login", "Login"));
             fields.add( new DataField("email", "Email"));
@@ -128,13 +118,13 @@ public class AdminApplication  extends Controller {
 
             return ok(adminusersScreen.render(fields, routes.AjaxController.getTableData(table, 0, "id", "asc", "", "").url()));
         }if(screen.equals("variables")){
-            table = "variable";
+            table = "Variable";
             fields.add( new DataField("name", "Name"));
             fields.add( new DataField("val", "Value"));
 
             return ok(variablesScreen.render(fields, routes.AjaxController.getTableData(table, 0, "id", "asc", "", "").url()));
         }else if(screen.equals("strings")){
-            table = "strings";
+            table = "Strings";
             fields.add( new DataField("id", "Name"));
             fields.add( new DataField("val", "Value"));
 

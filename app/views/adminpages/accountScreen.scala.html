@@ -2,22 +2,17 @@
     <div id='chpasserror' class="alert alert-error hide">
         Error
     </div>
-    <label class="control-label" for="password1">New Password</label>
-    <div class="controls">
-        <input type="text" id="password1" placeholder="Password">
-    </div>
-    <label class="control-label" for="password2">Retype password</label>
-    <div class="controls">
-        <input type="text" id="password2" placeholder="Password">
-    </div>
+    @components.textbox("password1", "New password", "", "")
+    @components.textbox("password2", "Retype password", "", "")
+
     <button onclick='savedata()' class="btn btn-primary">Save</button>
 </div>
 <script>
     function savedata(){
         var req = new Object();
-        req.password1 = $('#password1').val();
-        req.password2 = $('#password2').val();
-        $.post('@routes.AdminApplication.changePassword', req, function(data){
+        req.password1 = $('input[name=password1]').val();
+        req.password2 = $('input[name=password2]').val();
+        $.post('@routes.AjaxController.changePassword', req, function(data){
             if(data != 'ok'){
                 $('#chpasserror').show();
             }else{

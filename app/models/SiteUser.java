@@ -17,7 +17,7 @@ import java.util.List;
 import play.data.validation.Constraints.MaxLength;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.Email;
-
+import static play.data.Form.form;
 /**
  * Created with IntelliJ IDEA.
  * SiteUser: tirbycat
@@ -82,7 +82,7 @@ public class SiteUser extends Model {
      * @param order Sort order (either or asc or desc)
      * @param filter Filter applied on the name column
      */
-    public static Page<SiteUser> page(int page, String sortBy, String order, String filter) {
+    public static Page<SiteUser> page(Integer page, String sortBy, String order, String filter) {
         return
                 find.where()
                         .ilike("login", "%" + filter + "%")
@@ -92,7 +92,7 @@ public class SiteUser extends Model {
                         .getPage(page);
     }
 
-    public static ObjectNode jsonPage(int page, String sortBy, String order, String filter){
+    public static ObjectNode jsonPage(Integer page, String sortBy, String order, String filter){
         ObjectNode result = Json.newObject();
         Page<SiteUser> p = page(page, sortBy, order, filter);
 

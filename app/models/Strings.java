@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.List;
+import static play.data.Form.form;
 
 /**
  * Created with IntelliJ IDEA.
@@ -54,7 +55,7 @@ public class Strings extends Model {
      * @param order Sort order (either or asc or desc)
      * @param filter Filter applied on the name column
      */
-    public static ObjectNode jsonPage(int page, String sortBy, String order, String filter){
+    public static ObjectNode jsonPage(Integer page, String sortBy, String order, String filter){
         ObjectNode result = Json.newObject();
         Page<Strings> p = find.where()
                             .ilike("str_enum", "%" + filter + "%")
@@ -83,10 +84,10 @@ public class Strings extends Model {
         return result;
     }
 
-    public static ObjectNode editRecord(Strings object){
+    public static ObjectNode editRecord(){
         ObjectNode result = Json.newObject();
-
-        object.update();
+        Strings str =  form(Strings.class).bindFromRequest().get();
+        str.update();
         return result;
     }
 

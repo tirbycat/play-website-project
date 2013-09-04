@@ -1,6 +1,7 @@
 package controllers;
 
 import forms.AdminUserForm;
+import forms.ChangePasswordForm;
 import models.*;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
@@ -10,6 +11,8 @@ import play.mvc.Result;
 import play.mvc.Security;
 import play.data.Form;
 import secure.AdminSecured;
+
+import java.lang.reflect.InvocationTargetException;
 
 import static play.data.Form.form;
 
@@ -24,75 +27,53 @@ public class AjaxController extends Controller {
 
     @Security.Authenticated(AdminSecured.class)
     public static Result getTableData(String table, int page, String sortBy, String order, String filter, String mode){
-        switch(table){
-        case "users":
+        Class classDefinition = null;
+        try {
+            java.lang.reflect.Method method;
+            classDefinition = Class.forName("models." + table);
             switch(mode){
                 case "tabledata":
-                    return ok(SiteUser.jsonPage(page, sortBy, order, filter));
+                    method = classDefinition.getMethod("jsonPage", Integer.class, String.class, String.class, String.class);
+                    return ok((ObjectNode)method.invoke(null, page, sortBy, order, filter));
                 case "windata":
-                    return ok(SiteUser.jsonPage(page, sortBy, order, filter));
+                    method = classDefinition.getMethod("jsonValue", String.class);
+                    return ok((ObjectNode)method.invoke(null, filter));
                 case "delete":
-                    return ok(SiteUser.deleteRecord(filter));
+                    method = classDefinition.getMethod("deleteRecord", String.class);
+                    return ok((ObjectNode)method.invoke(null, filter));
                 case "save":
-                    return ok(SiteUser.editRecord(filter));
+                    method = classDefinition.getMethod("editRecord");
+                    return ok((ObjectNode)method.invoke(null));
             }
-            break;
-        case "variable":
-            switch(mode){
-                case "tabledata":
-                    return ok(Variable.jsonPage(page, sortBy, order, filter));
-                case "windata":
-                    return ok(Variable.jsonValue(filter));
-                case "delete":
-                    return ok(Variable.deleteRecord(filter));
-                case "save":
-                    Variable var =  form(Variable.class).bindFromRequest().get();
-                    return ok(Variable.editRecord(var));
-            }
-            break;
-        case "strings":
-            switch(mode){
-                case "tabledata":
-                    return ok(Strings.jsonPage(page, sortBy, order, filter));
-                case "windata":
-                    return ok(Strings.jsonValue(filter));
-                case "delete":
-                    return ok(Strings.deleteRecord(filter));
-                case "save":
-                    Strings var =  form(Strings.class).bindFromRequest().get();
-                    return ok(Strings.editRecord(var));
-            }
-            break;
-        case "roles":
-            switch(mode){
-                case "tabledata":
-                    return ok(AdminRole.jsonPage(page, sortBy, order, filter));
-                case "windata":
-                    return ok(AdminRole.jsonValue(filter));
-                case "delete":
-                    return ok(AdminRole.deleteRecord(filter));
-                case "save":
-                    AdminRole var =  form(AdminRole.class).bindFromRequest().get();
-                    return ok(AdminRole.editRecord(var));
-            }
-            break;
-        case "administrators":
-            switch(mode){
-                case "tabledata":
-                    return ok(AdminUser.jsonPage(page, sortBy, order, filter));
-                case "windata":
-                    return ok(AdminUser.jsonValue(filter));
-                case "delete":
-                    return ok(AdminUser.deleteRecord(filter));
-                case "save":
-                    AdminUserForm var =  form(AdminUserForm.class).bindFromRequest().get();
-                    return ok(AdminUser.editRecord(var));
-            }
-            break;
-        default:
-            return badRequest();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         return badRequest();
+    }
+
+    @Security.Authenticated(AdminSecured.class)
+    public static Result getListBoxData(String list, String filter){
+        java.lang.reflect.Method method;
+
+        Class classDefinition = null;
+        try {
+            classDefinition = Class.forName("models." + list);
+            method = classDefinition.getMethod("toList", String.class);
+            return ok((ObjectNode)method.invoke(null, filter));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return badRequest();
+    }
+
+    @Security.Authenticated(AdminSecured.class)
+    public static Result changePassword() {
+        Form<ChangePasswordForm> passForm = form(ChangePasswordForm.class).bindFromRequest();
+        if (passForm.hasErrors()) {
+            return ok(passForm.errorsAsJson());
+        } else {
+            AdminUser.changePassword(Integer.parseInt(session("adminUserId")), passForm.get().password1);
+        }
+        return ok("ok");
     }
 }
