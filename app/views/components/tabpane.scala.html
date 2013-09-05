@@ -1,0 +1,5 @@
+@(elementId: String, active: Boolean)(content: Html)
+
+<div class="tab-pane @if(active==true){active}" id="@elementId">
+    @content
+</div>

@@ -1,6 +1,6 @@
-@(popupId: String, title: String, dataSource: String)(content: Html)
+@(popupId: String, title: String, dataSource: String, width: Int = 0)(content: Html)
 
-<div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="modal hide fade in" id="@popupId" ng-controller="WinDataCtrl">
+<div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" @if(width!=0){style="width: @(width)px; margin-left:-@(width/2)px;"} class="modal hide fade in" id="@popupId" ng-controller="WinDataCtrl">
     <div class="modal-header">
         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
         <h3 id="myModalLabel">@title</h3>
@@ -25,7 +25,7 @@
         $scope.updatedata = function(id) {
             $http.post("@dataSource&mode=windata&filter="+id, "{}",$routeParams).success(function(data) {
 
-                if(id != previd)
+                if(id == 'new' || id != previd)
                 {
                     $('#editDataPopup input').each(function(index){
                         $(this).val('');

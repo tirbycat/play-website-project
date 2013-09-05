@@ -2,6 +2,16 @@
 
 @components.ajaxtable("users", fields, dataSource, "editWindow", false, true)
 
-@components.popup("editWindow", "title", dataSource){
-    Hello Universe!
+@components.popup("editWindow", "title", dataSource, 900){
+    @components.tabtable(Array("tab1", "tab2", "tab3"), 2){
+        @components.tabpane("tab1", false){
+            @components.textarea("texar", "textarea")
+        }
+        @components.tabpane("tab2", true){
+            @components.richtexteditor("texar", "textarea title")
+        }
+        @components.tabpane("tab3", false){
+            <p>ТАБ 3</p>
+        }
+    }
 }

@@ -1,6 +1,6 @@
-@(elementId: String, listDataSource: String, jsDataSource: String, caption: String)
+@(elementId: String, title: String, listDataSource: String, jsDataSource: String, caption: String)
 
-<label class="control-label" for="@elementId">Admin role</label>
+<label class="control-label" for="@elementId">@title</label>
 <div class="controls">
     <select name="@elementId" ng-init="getListByFilter('@listDataSource', '')">
         <option value="" ng-selected="@jsDataSource == null"></option>

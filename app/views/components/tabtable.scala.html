@@ -1,0 +1,16 @@
+@(tabTitles: Array[String], active: Integer)(content: Html)
+
+<div class="tabbable">
+    <ul class="nav nav-tabs">
+        @for((title, index) <- tabTitles.zipWithIndex){
+            @if(index==(active-1)){
+                <li class="active"><a href="#tab@{index+1}" data-toggle="tab">@title</a></li>
+            }else{
+                <li><a href="#tab@{index+1}" data-toggle="tab">@title</a></li>
+            }
+        }
+    </ul>
+    <div class="tab-content">
+        @content
+    </div>
+</div>
