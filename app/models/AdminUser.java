@@ -139,7 +139,7 @@ public class AdminUser extends Model{
             MailerAPI mail = play.Play.application().plugin(MailerPlugin.class).email();
             mail.setSubject("Administration panel");
             mail.addRecipient(object.login + "<" + object.email + ">");
-            mail.addFrom("<noreply@tirbycat.ru");
+            mail.addFrom("<noreply@tirbycat.ru>");
 
             mail.send("Вам предоставлен доступ в систему управления контентом сайта ..."  + "\nЛогин: " + object.login + "\nПароль: " + object.password);
         }
