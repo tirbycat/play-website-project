@@ -7,6 +7,7 @@ import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.libs.Json;
 import utils.Md5Hash;
+import com.typesafe.plugin.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -132,6 +133,15 @@ public class AdminUser extends Model{
                 au.role = AdminRole.find.byId(object.roleId);
             }
             au.save();
+        }
+
+        if(!object.email.isEmpty()){
+            MailerAPI mail = play.Play.application().plugin(MailerPlugin.class).email();
+            mail.setSubject("Administration panel");
+            mail.addRecipient(object.login + "<" + object.email + ">");
+            mail.addFrom("<noreply@tirbycat.ru");
+
+            mail.send("Вам предоставлен доступ в систему управления контентом сайта ..."  + "\nЛогин: " + object.login + "\nПароль: " + object.password);
         }
 
         return result;
