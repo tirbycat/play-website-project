@@ -42,6 +42,13 @@ public class Variable extends Model {
             String.class, Variable.class
     );
 
+    public static String getStringValue(String name){
+        return find.byId(name).val;
+    }
+
+    public static Integer getIntegerValue(String name){
+        return Integer.parseInt(find.byId(name).val);
+    }
     /**
      * Return a page of computer
      *

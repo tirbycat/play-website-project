@@ -1,6 +1,6 @@
 @(fields: List[DataField], dataSource: String)
 
-@components.ajaxtable("users", fields, dataSource, "editWindow", false, true)
+@components.ajaxtable(fields, dataSource, "editWindow", false, true)
 
 @components.popup("editWindow", "title", dataSource, 900){
     @components.tabtable(Array("tab1", "tab2", "tab3"), 2){
@@ -11,7 +11,14 @@
             @components.richtexteditor("texar", "textarea title")
         }
         @components.tabpane("tab3", false){
-            <p>ТАБ 3</p>
+            @components.picture("pict1", "#")
+            @components.fileupload("picture", "Upload", "fileuploaddone")
         }
     }
+    <script>
+        function fileuploaddone(data){
+            $('.pict1' ).attr('src', data);
+            $('.pict1' ).removeClass('hide');
+        }
+    </script>
 }

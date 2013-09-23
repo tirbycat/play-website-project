@@ -1,0 +1,31 @@
+@(elementId: String, caption: String, callBackFunc: String)
+
+<form id="@elementId" action="@routes.AjaxController.loadFile()" enctype="multipart/form-data" method="post">
+    <label class="control-label" for="@elementId">@caption</label>
+    <div class="controls span4">
+        <input id="@{elementId}file" name="file" type="file" class="span3">
+        <button class="btn btn-primary">Upload</button>
+        <div id="@{elementId}progress" class="progress progress-striped active hide">
+            <div class="bar" style="width: 0%;"></div>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function() {
+        $("#@elementId").ajaxForm({
+            success:function(data) {
+                $("#@{elementId}progress").hide();
+                @{callBackFunc}(data);
+            },
+            error: function(data) {
+                $("#@{elementId}progress").hide();
+            },
+            uploadProgress:function(e,p,t,tc) {
+                $("#@{elementId}progress div").css('width', tc+"%");
+            },
+            beforeSubmit: function(){
+                $("#@{elementId}progress").show();
+            }
+        });
+    });
+</script>

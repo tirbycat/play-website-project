@@ -3,24 +3,28 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
-GET     /login                      controllers.Application.login()
-GET     /registration               controllers.Application.registration()
-POST    /register                   controllers.Application.register()
-POST    /auth                       controllers.Application.authenticate()
-GET     /logout                     controllers.Application.logout()
+GET         /                                  controllers.Application.index()
+GET         /login                             controllers.Application.login()
+GET         /sociallogin/:netw                 controllers.Application.socialAuthenticate(netw: String)
+GET         /registration                      controllers.Application.registration()
+POST        /register                          controllers.Application.register()
+POST        /auth                              controllers.Application.authenticate()
+GET         /logout                            controllers.Application.logout()
+
+GET         /socialtoken                       socialapi.VkontakteOauth2API.getSocialToken()
 
 # Administration module
-GET     /admimistration             controllers.AdminApplication.index()
-GET     /admimistration/screens/:id controllers.AdminApplication.getScreen(id :String)
-GET     /admimistration/login       controllers.AdminApplication.login()
-POST    /admimistration/auth        controllers.AdminApplication.authenticate()
-GET     /admimistration/logout      controllers.AdminApplication.logout()
+GET         /admimistration                    controllers.AdminApplication.index()
+GET         /admimistration/screens/:id        controllers.AdminApplication.getScreen(id :String)
+GET         /admimistration/login              controllers.AdminApplication.login()
+POST        /admimistration/auth               controllers.AdminApplication.authenticate()
+GET         /admimistration/logout             controllers.AdminApplication.logout()
 
 # Ajax controllers
-POST   /admimistration/gettable     controllers.AjaxController.getTableData(table: String ?= "", page:Int ?=0, sort ?="id", order ?="asc", filter ?="", mode ?="")
-GET    /admimistration/listboxdata  controllers.AjaxController.getListBoxData(list: String, filter: String)
-POST    /admimistration/passchange  controllers.AjaxController.changePassword()
+POST        /admimistration/gettable           controllers.AjaxController.getTableData(table: String ?= "", page:Int ?=0, sort ?="id", order ?="asc", filter ?="", mode ?="")
+GET         /admimistration/listboxdata        controllers.AjaxController.getListBoxData(list: String, filter: String)
+POST        /admimistration/passchange         controllers.AjaxController.changePassword()
+POST        /admimistration/fileupload         controllers.AjaxController.loadFile()
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET         /assets/*file                      controllers.Assets.at(path="/public", file)

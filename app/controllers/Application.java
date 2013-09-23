@@ -8,6 +8,7 @@ import play.data.Form;
 import play.mvc.*;
 
 import secure.Secured;
+import socialapi.VkontakteOauth2API;
 import utils.Md5Hash;
 import views.html.sitepages.index;
 import views.html.sitepages.login;
@@ -19,6 +20,8 @@ import java.util.List;
 import static play.data.Form.form;
 
 public class Application extends Controller{
+
+    private static VkontakteOauth2API vkApi = new VkontakteOauth2API("3867224", "N6gQuOq7bJp1v3RoSr5X", "notify,friends,photos,wall,groups");
 
     public static Result login() {
         return ok(login.render(form(LoginForm.class), false, routes.Application.authenticate()));
@@ -53,6 +56,11 @@ public class Application extends Controller{
         }
     }
 
+    public static Result socialAuthenticate(String netw) {
+
+        return vkApi.retrieveVerificationCode();
+    }
+
     public static Result logout() {
         session().clear();
         flash("success", "You've been logged out");
@@ -83,6 +91,7 @@ public class Application extends Controller{
             menu.add(userSubMenu);
         }else{
             menu.add(new MenuItem("Registration", routes.Application.registration().url()));
+            menu.add(new MenuItem("VK", routes.Application.socialAuthenticate("vk").url()));
         }
         return ok(index.render(title, menu, user == null ? form(LoginForm.class) : null));
     }

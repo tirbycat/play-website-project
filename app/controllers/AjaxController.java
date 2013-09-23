@@ -3,16 +3,22 @@ package controllers;
 import forms.AdminUserForm;
 import forms.ChangePasswordForm;
 import models.*;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 import play.libs.Json;
-import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.Security;
+import play.mvc.*;
 import play.data.Form;
 import secure.AdminSecured;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import static play.data.Form.form;
 
@@ -75,5 +81,34 @@ public class AjaxController extends Controller {
             AdminUser.changePassword(Integer.parseInt(session("adminUserId")), passForm.get().password1);
         }
         return ok("ok");
+    }
+
+    @Security.Authenticated(AdminSecured.class)
+    public static Result loadFile() {
+        Http.MultipartFormData body = request().body().asMultipartFormData();
+        Http.MultipartFormData.FilePart picture = body.getFile("file");
+        if (picture != null) {
+            String fileName = RandomStringUtils.randomAlphanumeric(12);
+            String ext = picture.getFilename().substring(picture.getFilename().length()-3, picture.getFilename().length());
+
+            String contentType = picture.getContentType();
+
+            File saveTo = new File(Variable.getStringValue("CONTENT_PATH_FS"), fileName + "." + ext);
+
+            File target = picture.getFile();
+
+            boolean result = target.renameTo(saveTo);
+            if(!result){
+                try {
+                    Files.copy(target.toPath(), saveTo.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
+                    target.delete();
+                } catch (IOException e) {
+                    return internalServerError(e.getMessage());
+                }
+            }
+            return ok(Variable.getStringValue("CONTENT_PATH_HTTP") + saveTo.getName());
+        } else {
+            return badRequest("Missing file");
+        }
     }
 }

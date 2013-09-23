@@ -1,6 +1,6 @@
 @(fields: List[DataField], dataSource: String)
 
-@components.ajaxtable("roles", fields, dataSource, "editWindow", true, true)
+@components.ajaxtable(fields, dataSource, "editWindow", true, true)
 
 @components.popup("editWindow", "Administrator role", dataSource){
     <div class="control-group">

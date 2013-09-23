@@ -1,0 +1,16 @@
+@(fields: List[DataField], dataSource: String)
+
+@components.ajaxtable(fields, dataSource, "editWindow", true, true)
+
+@components.popup("editWindow", "Edit news", dataSource){
+<div class="control-group">
+    <input type="hidden" name='id' value="{{data.data.id}}">
+    @components.textbox("title", "Title", "data.data.title")
+    @components.datetime("date", "Date", true, false, "data.data.date")
+    @components.textarea("shortText", "Short text", "data.data.shortText")
+
+    @components.textarea("fullText", "Full text", "data.data.fullText")
+    @components.textbox("smallPict", "smallPict", "data.data.smallPict")
+    @components.textbox("bigPict", "bigPict", "data.data.bigPict")
+</div>
+}

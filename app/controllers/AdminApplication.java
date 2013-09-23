@@ -18,6 +18,7 @@ import views.html.adminpages.adminusersScreen;
 import views.html.adminpages.rolesScreen;
 import views.html.adminpages.stringsScreen;
 import views.html.adminpages.variablesScreen;
+import views.html.adminpages.newsScreen;
 import views.html.adminpages.mainScreen;
 import views.html.adminpages.accountScreen;
 import views.html.sitepages.login;
@@ -63,6 +64,9 @@ public class AdminApplication  extends Controller {
         sub.addSubMenuItem(new MenuItem("Roles", "#/roles"));
         sub.addSubMenuItem(new MenuItem("Administrators", "#/administrators"));
         menu.add(sub);
+
+        MenuItem sub3 = new MenuItem("News", "#/news");
+        menu.add(sub3);
 
         MenuItem sub1 = new MenuItem("Variables", "#/variables");
         menu.add(sub1);
@@ -117,6 +121,14 @@ public class AdminApplication  extends Controller {
             fields.add( new DataField("role.roleName", "Role"));
 
             return ok(adminusersScreen.render(fields, routes.AjaxController.getTableData(table, 0, "id", "asc", "", "").url()));
+        }if(screen.equals("news")){
+            table = "News";
+            fields.add( new DataField("id", "ID"));
+            fields.add( new DataField("date", "Date"));
+            fields.add( new DataField("title", "Title"));
+            fields.add( new DataField("shortText", "Text"));
+
+            return ok(newsScreen.render(fields, routes.AjaxController.getTableData(table, 0, "id", "asc", "", "").url()));
         }if(screen.equals("variables")){
             table = "Variable";
             fields.add( new DataField("name", "Name"));

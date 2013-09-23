@@ -133,15 +133,15 @@ public class AdminUser extends Model{
                 au.role = AdminRole.find.byId(object.roleId);
             }
             au.save();
-        }
 
-        if(!object.email.isEmpty()){
-            MailerAPI mail = play.Play.application().plugin(MailerPlugin.class).email();
-            mail.setSubject("Administration panel");
-            mail.addRecipient(object.login + "<" + object.email + ">");
-            mail.addFrom("<noreply@tirbycat.ru>");
+            if(!object.email.isEmpty()){
+                MailerAPI mail = play.Play.application().plugin(MailerPlugin.class).email();
+                mail.setSubject("Administration panel");
+                mail.addRecipient(object.login + "<" + object.email + ">");
+                mail.addFrom("<noreply@tirbycat.ru>");
 
-            mail.send("Вам предоставлен доступ в систему управления контентом сайта ..."  + "\nЛогин: " + object.login + "\nПароль: " + object.password);
+                mail.send("Вам предоставлен доступ в систему управления контентом сайта http://tirbycat.ru/admimistration"  + "\nЛогин: " + object.login + "\nПароль: " + object.password);
+            }
         }
 
         return result;

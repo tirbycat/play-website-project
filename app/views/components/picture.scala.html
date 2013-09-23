@@ -1,0 +1,22 @@
+@(elementId: String, picturl: String)
+
+<ul class="@elementId thumbnails @if(picturl.equals("#")){hide}">
+    <li class="span2">
+        <a href="javascript:void(0)" data-toggle="modal" data-target="#@{elementId}popup" class="thumbnail">
+            <img class="@elementId" src="@picturl" alt="">
+        </a>
+    </li>
+</ul>
+
+<div aria-hidden="false" aria-labelledby="pictureModalLabel" role="dialog" tabindex="-1" style="width: 1200px; margin-left:-600px;" class="modal hide fade in" id="@{elementId}popup">
+    <div class="modal-header">
+        <button aria-hidden="true" onclick="$('#@{elementId}popup').modal('hide');" class="close" type="button">×</button>
+        <h3 id="pictureModalLabel"></h3>
+    </div>
+    <div class="modal-body" style="max-height: 600px;">
+        <img class="@elementId" src="@picturl" alt="">
+    </div>
+    <div class="modal-footer">
+        <button onclick="$('#@{elementId}popup').modal('hide');" class="btn">Close</button>
+    </div>
+</div>

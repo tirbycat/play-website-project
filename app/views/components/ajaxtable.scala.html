@@ -1,4 +1,4 @@
-@(screen: String, fields: List[DataField], dataSource: String, popupEditorId: String, canAdd: Boolean, canDelete: Boolean)
+@(fields: List[DataField], dataSource: String, popupEditorId: String, canAdd: Boolean, canDelete: Boolean)
 
 @header(key:String, title:String) = {
     <th ng-click="getTable(0,'@key', ['asc','desc'][((data.order=='asc') + 0)],'');" class="header ng-class: ['', ['headerSortDown', 'headerSortUp'][((data.order=='asc') + 0)]][(data.sortBy=='@key') + 0];">
