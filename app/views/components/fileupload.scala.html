@@ -1,8 +1,9 @@
-@(elementId: String, caption: String, callBackFunc: String)
+@(elementId: String, caption: String, callBackFunc: String, ds: String)
 
 <form id="@elementId" action="@routes.AjaxController.loadFile()" enctype="multipart/form-data" method="post">
-    <label class="control-label" for="@elementId">@caption</label>
+    <label class="control-label" for="@{elementId}file">@caption</label>
     <div class="controls span4">
+        <input id='@{elementId}fname' type="hidden" name="@elementId" value="{{@ds}}">
         <input id="@{elementId}file" name="file" type="file" class="span3">
         <button class="btn btn-primary">Upload</button>
         <div id="@{elementId}progress" class="progress progress-striped active hide">
@@ -15,7 +16,11 @@
         $("#@elementId").ajaxForm({
             success:function(data) {
                 $("#@{elementId}progress").hide();
-                @{callBackFunc}(data);
+//                @@ { callBackFunc }(data);
+                $('#@{elementId}fname').val(data);
+                var scope = angular.element($("#editDataPopup")).scope();
+                scope.@ds = data;
+                scope.$apply();
             },
             error: function(data) {
                 $("#@{elementId}progress").hide();

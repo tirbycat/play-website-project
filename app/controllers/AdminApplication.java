@@ -124,7 +124,7 @@ public class AdminApplication  extends Controller {
         }if(screen.equals("news")){
             table = "News";
             fields.add( new DataField("id", "ID"));
-            fields.add( new DataField("date", "Date"));
+            fields.add( new DataField("stringDate", "Date"));
             fields.add( new DataField("title", "Title"));
             fields.add( new DataField("shortText", "Text"));
 

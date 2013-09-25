@@ -3,6 +3,7 @@ package models;
 import com.avaje.ebean.Page;
 import org.codehaus.jackson.node.ObjectNode;
 import org.joda.time.LocalDate;
+import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.libs.Json;
@@ -11,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -32,8 +34,18 @@ public class News extends Model {
     @Constraints.Required
     public String title;
 
+    @Formats.DateTime(pattern="dd/MM/yyyy")
     @Constraints.Required
     public Date date;
+
+    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    public String getStringDate(){
+        if(date!=null){
+            return simpleDateFormat.format(date);
+        }else{
+            return simpleDateFormat.format(new Date());
+        }
+    }
 
     @Constraints.Required
     public String shortText;

@@ -6,11 +6,25 @@
 <div class="control-group">
     <input type="hidden" name='id' value="{{data.data.id}}">
     @components.textbox("title", "Title", "data.data.title")
-    @components.datetime("date", "Date", true, false, "data.data.date")
+    @components.datetime("date", "Date", true, false, "data.data.stringDate")
     @components.textarea("shortText", "Short text", "data.data.shortText")
 
     @components.textarea("fullText", "Full text", "data.data.fullText")
-    @components.textbox("smallPict", "smallPict", "data.data.smallPict")
-    @components.textbox("bigPict", "bigPict", "data.data.bigPict")
+
+    @components.picture("pict1", "data.data.smallPict")
+    @components.fileupload("smallPict", "Upload preview", "fileuploaddone1", "data.data.smallPict")
+
+    @components.picture("pict2", "data.data.bigPict")
+    @components.fileupload("bigPict", "Upload full picture", "fileuploaddone2", "data.data.bigPict")
 </div>
+    <script>
+        function fileuploaddone(data){
+//            $('.pict1' ).attr('src', data);
+//            $('.pict1' ).removeClass('hide');
+        }
+        function fileuploaddone2(data){
+//            $('.pict2' ).attr('src', data);
+//            $('.pict2' ).removeClass('hide');
+        }
+    </script>
 }
